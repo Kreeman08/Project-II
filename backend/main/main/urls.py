@@ -8,15 +8,18 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from assignments.views import AssignmentViewSet, SubmissionViewSet
-from courses.views import CourseViewSet, EnrollmentViewSet
+from courses.views import CoursePostReplyViewSet, CoursePostViewSet, CourseViewSet, EnrollmentViewSet
 from materials.views import MaterialViewSet
 from tests_app.views import AnswerViewSet, OptionViewSet, QuestionViewSet, TestSubmissionViewSet, TestViewSet
 from users.views import LMSJWTView, RegisterView, UserViewSet
+from main.views import home
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename='users')
 router.register(r'courses', CourseViewSet, basename='courses')
 router.register(r'enrollments', EnrollmentViewSet, basename='enrollments')
+router.register(r'course-posts', CoursePostViewSet, basename='course-posts')
+router.register(r'course-post-replies', CoursePostReplyViewSet, basename='course-post-replies')
 router.register(r'materials', MaterialViewSet, basename='materials')
 router.register(r'assignments', AssignmentViewSet, basename='assignments')
 router.register(r'submissions', SubmissionViewSet, basename='submissions')
@@ -27,6 +30,7 @@ router.register(r'test-submissions', TestSubmissionViewSet, basename='test-submi
 router.register(r'answers', AnswerViewSet, basename='answers')
 
 urlpatterns = [
+    path('', home, name='home'),
     path('admin/', admin.site.urls),
 
     path('api/', include(router.urls)),

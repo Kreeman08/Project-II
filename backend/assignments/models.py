@@ -15,6 +15,8 @@ class Assignment(models.Model):
     description = models.TextField(blank=True)
 
     deadline = models.DateTimeField()
+    reference_text = models.TextField(blank=True, null=True)
+    reference_file = models.FileField(upload_to='assignment_refs/', blank=True, null=True)
 
     created_by = models.ForeignKey(
         User,

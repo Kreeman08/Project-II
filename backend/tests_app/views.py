@@ -2,12 +2,12 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import serializers, status
+from django.db.models import Q
 
 from .models import Test, Question, Option, TestSubmission, Answer
 from .serializers import *
 
-from users.permissions import IsTeacher, IsStudent
 from courses.models import Enrollment
 
 
@@ -18,26 +18,32 @@ class TestViewSet(viewsets.ModelViewSet):
     serializer_class = TestSerializer
 
     def get_permissions(self):
-        if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            return [IsAuthenticated(), IsTeacher()]
         return [IsAuthenticated()]
 
     def get_queryset(self):
 
         user = self.request.user
 
-        # teachers/admin see all tests
-        if user.role in ['teacher', 'admin']:
+        if user.role == 'admin':
             return Test.objects.all()
 
-        # students see only enrolled course tests
         enrolled_courses = Enrollment.objects.filter(
             student=user
         ).values_list('course_id', flat=True)
 
-        return Test.objects.filter(course_id__in=enrolled_courses)
+        return Test.objects.filter(
+            Q(course__teacher=user) | Q(course_id__in=enrolled_courses)
+        ).distinct()
 
     def perform_create(self, serializer):
+        course = serializer.validated_data.get('course')
+        if course.teacher != self.request.user:
+            raise serializers.ValidationError(
+                {'course': 'Only the class teacher can create tests.'}
+            )
+        if self.request.user.role != 'teacher':
+            self.request.user.role = 'teacher'
+            self.request.user.save(update_fields=['role'])
         serializer.save(created_by=self.request.user)
 
 
@@ -47,7 +53,15 @@ class QuestionViewSet(viewsets.ModelViewSet):
     serializer_class = QuestionSerializer
 
     def get_permissions(self):
-        return [IsAuthenticated(), IsTeacher()]
+        return [IsAuthenticated()]
+
+    def perform_create(self, serializer):
+        test = serializer.validated_data.get('test')
+        if test.course.teacher != self.request.user:
+            raise serializers.ValidationError(
+                {'test': 'Only the class teacher can add questions.'}
+            )
+        serializer.save()
 
 
 # ================= OPTION =================
@@ -56,7 +70,15 @@ class OptionViewSet(viewsets.ModelViewSet):
     serializer_class = OptionSerializer
 
     def get_permissions(self):
-        return [IsAuthenticated(), IsTeacher()]
+        return [IsAuthenticated()]
+
+    def perform_create(self, serializer):
+        question = serializer.validated_data.get('question')
+        if question.test.course.teacher != self.request.user:
+            raise serializers.ValidationError(
+                {'question': 'Only the class teacher can add options.'}
+            )
+        serializer.save()
 
 
 # ================= SUBMISSION (AUTO GRADING) =================
@@ -66,16 +88,16 @@ class TestSubmissionViewSet(viewsets.ModelViewSet):
     serializer_class = TestSubmissionSerializer
 
     def get_permissions(self):
-        if self.action == 'create':
-            return [IsAuthenticated(), IsStudent()]
         return [IsAuthenticated()]
 
     def get_queryset(self):
 
         user = self.request.user
 
-        if user.role == 'student':
-            return TestSubmission.objects.filter(student=user)
+        if user.role != 'admin':
+            return TestSubmission.objects.filter(
+                Q(student=user) | Q(test__course__teacher=user)
+            ).distinct()
 
         return TestSubmission.objects.all()
 
@@ -88,7 +110,7 @@ class TestSubmissionViewSet(viewsets.ModelViewSet):
         try:
             test = Test.objects.get(id=test_id)
         except Test.DoesNotExist:
-            raise ValueError("Test not found")
+            raise serializers.ValidationError({"test": "Test not found"})
 
         # 🔐 ENROLLMENT CHECK
         is_enrolled = Enrollment.objects.filter(
@@ -97,9 +119,8 @@ class TestSubmissionViewSet(viewsets.ModelViewSet):
         ).exists()
 
         if not is_enrolled:
-            return Response(
-                {"error": "You are not enrolled in this course"},
-                status=status.HTTP_403_FORBIDDEN
+            raise serializers.ValidationError(
+                {"test": "You are not enrolled in this course"}
             )
 
         submission = serializer.save(student=user)
@@ -187,6 +208,4 @@ class AnswerViewSet(viewsets.ModelViewSet):
     serializer_class = AnswerSerializer
 
     def get_permissions(self):
-        if self.action == 'create':
-            return [IsAuthenticated(), IsStudent()]
         return [IsAuthenticated()]

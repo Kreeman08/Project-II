@@ -1,0 +1,203 @@
+/* src/pages/MyClasses.css */
+
+.myclasses-page {
+  margin-top: 80px;
+  padding: 30px;
+}
+
+/* HEADER */
+
+.myclasses-header {
+  margin-bottom: 30px;
+}
+
+.myclasses-heading {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.myclasses-subtitle {
+  margin-top: 10px;
+  font-size: 16px;
+  color: var(--textdim);
+}
+
+/* TOP BAR */
+
+.myclasses-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+
+  padding: 10px 0 20px;
+}
+
+.myclasses-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* SORT */
+
+.myclasses-sortbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  flex-shrink: 0;
+}
+
+.myclasses-sortlabel {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.myclasses-sortwrapper {
+  position: relative;
+}
+
+.myclasses-sortwrapper select {
+  padding: 8px 12px;
+
+  font-size: 14px;
+
+  border: 1px solid var(--textdim);
+  border-radius: 6px;
+
+  background: var(--sidebar);
+  color: var(--text);
+
+  outline: none;
+  cursor: pointer;
+}
+
+/* GRID */
+
+.myclasses-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fill, minmax(250px, 1fr));
+
+  gap: 30px;
+
+  max-width: 1200px;
+}
+
+/* LINK */
+
+.myclasses-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* CARD */
+
+.myclasses-card {
+  background: var(--sidebar);
+
+  border: 1px solid var(--textdim);
+  border-radius: 10px;
+
+  padding: 18px;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+  text-align: left;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.myclasses-card:hover {
+  transform: translateY(-4px);
+
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+/* CARD HEADER */
+
+.myclasses-cardheader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 20px;
+}
+
+/* ICON */
+
+.myclasses-cardicon {
+  font-size: 32px;
+  font-weight: 700;
+  color: #e74e0c;
+}
+
+/* CAPSULE */
+
+.myclasses-capsule {
+  display: inline-block;
+
+  padding: 5px 12px;
+
+  background-color: var(--button);
+  color: #fff;
+
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* TITLE */
+
+.myclasses-cardtitle {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+
+  margin-bottom: 8px;
+}
+
+/* TEACHER */
+
+.myclasses-teacher {
+  font-size: 15px;
+  color: var(--textdim);
+
+  margin-bottom: 16px;
+}
+
+/* LINE */
+
+.myclasses-card hr {
+  border: none;
+  border-top: 1px solid var(--textdim);
+
+  margin: 14px 0;
+}
+
+/* STUDENTS */
+
+.myclasses-students {
+  font-size: 15px;
+  color: var(--text);
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.myclasses-studenticon {
+  display: flex;
+  align-items: center;
+}

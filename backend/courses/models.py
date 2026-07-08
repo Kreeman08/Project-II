@@ -58,3 +58,46 @@ class Enrollment(models.Model):
 
     def __str__(self):
         return f"{self.student.username} -> {self.course.name}"
+
+
+class CoursePost(models.Model):
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        related_name='posts'
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='course_posts'
+    )
+    text = models.TextField()
+    file = models.FileField(upload_to='course_posts/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.course.name} - {self.author.username}"
+
+
+class CoursePostReply(models.Model):
+    post = models.ForeignKey(
+        CoursePost,
+        on_delete=models.CASCADE,
+        related_name='replies'
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='course_post_replies'
+    )
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f"Reply by {self.author.username}"

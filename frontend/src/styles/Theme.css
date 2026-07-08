@@ -1,0 +1,48 @@
+/* src/styles/Theme.css */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+/* =========================
+   DARK THEME
+========================= */
+
+.dark {
+  --bg: #071225;
+  --sidebar: #101b35;
+  --header: #08152c;
+  --card: #121f3d;
+  --text: white;
+  --textdim:  #9399a6;
+  --button: #6899ec;
+  --menu: #1d2b4d;
+  --theme: orange;
+  --popup:#18294f;
+  --textselect: rgba(255,255,255,0.08);
+}
+
+/* =========================
+   LIGHT THEME
+========================= */
+
+.light {
+  --bg: #f3f4f6;
+  --sidebar:   #f7f8fc;
+  --header: #ffffff;
+  --card: #ffffff;
+  --text: #111827;
+  --textdim:  #6b7280;
+  --button: #5c8cfd;
+  --menu: #d9dbe0;
+  --theme: silver;
+  --popup:#e0e0e0;
+    --textselect: hsl(0, 60%, 99%);
+  
+}                     

@@ -1,0 +1,501 @@
+/* src/pages/AssignmentDetails.css */
+
+.assignment-details-page {
+  width: 100%;
+}
+
+/* TOP */
+
+.assignment-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.assignment-top h1 {
+  font-size: 45px;
+  color: var(--text);
+  line-height: 1.1;
+  max-width: 700px;
+}
+
+.deadline-box {
+  background: rgba(255,0,0,0.08);
+  border:1px solid rgba(255,0,0,0.12);
+  border-radius: 12px;
+  padding: 14px 18px;
+  min-width: 220px;
+}
+
+.deadline-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #ff6b6b;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.deadline-time {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ff6b6b;
+}
+
+/* SECTION */
+
+.detail-section {
+  margin-bottom: 34px;
+}
+
+.detail-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 18px;
+
+  color: var(--text);
+}
+
+.detail-title h3 {
+  font-size: 20px;
+}
+
+/* INSTRUCTION */
+
+.instruction-box {
+  background: var(--card);
+
+  border:
+    1px solid rgba(255,255,255,0.08);
+
+  border-radius: 16px;
+
+  padding: 24px;
+}
+
+.instruction-box p {
+  color: var(--text);
+  line-height: 2;
+  white-space: pre-line;
+}
+
+/* =========================
+   REFERENCE TABS
+========================= */
+
+.reference-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.reference-tabs button {
+  flex: 1;
+  background: var(--menu);
+  color: var(--text);
+  border: none;
+  border-radius: 14px;
+  padding: 18px 14px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.2px;
+  transition: all 0.2s ease;
+}
+
+.reference-tabs button:hover {
+    transform: scale(1.02);
+}
+
+.reference-tabs .active-tab {
+  background: var(--button);
+  color: #fff;
+}
+
+/* =========================
+   TEXT REFERENCE
+========================= */
+
+.reference-text-box {
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.reference-text-box p {
+  color: var(--textdim);
+  line-height: 1.8;
+  white-space: pre-line;
+  margin: 0;
+}
+
+/* =========================
+   FILE REFERENCE
+========================= */
+
+.reference-file-link-box {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.reference-file {
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reference-file:hover {
+  transform: scale(1.02);
+  border-color: rgba(59,130,246,0.35);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+.reference-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.file-icon-box {
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  border-radius: 14px;
+  background: rgba(59,130,246,0.12);
+  color: #3b82f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.reference-left h4 {
+  color: var(--text);
+  font-size: 15px;
+  margin: 0 0 4px;
+  word-break: break-word;
+}
+
+.reference-left p {
+  color: var(--textdim);
+  font-size: 13px;
+  margin: 0;
+}
+
+/* SUBMISSION */
+
+.submission-box {
+  min-height: 180px;
+  border:2px dashed rgba(255,255,255,0.12);
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  background: var(--card);
+}
+
+.submission-box p {
+  color: var(--textdim);
+}
+
+.submitted-box {
+  border-style: solid;
+}
+
+.submitted-box p {
+  color: #6ee7b7;
+  font-weight: 800;
+}
+.uploaded-file-name {
+  margin-top: 10px;
+
+  color: var(--text);
+
+  font-size: 14px;
+  font-weight: 600;
+}
+.upload-btn {
+  border: none;
+  background: var(--button);
+  color: white;
+  padding: 14px 24px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* SUBMIT */
+
+.submit-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 34px;
+}
+
+.submit-btn {
+  border: none;
+  background: var(--button);
+  color: white;
+  padding: 16px 34px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.submit-section p {
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--textdim);
+  text-align: center;
+  max-width: 500px;
+  line-height: 1.7;
+}
+
+/* STATUS */
+
+.status-footer {
+  margin-top: 34px;
+  background: var(--card);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 18px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-footer span {
+  color: var(--text);
+}
+
+.status-tag {
+  background:rgba(255,0,0,0.12);
+  color: #ff6b6b;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+  .assignment-top {
+    flex-direction: column;
+  }
+
+  .assignment-top h1 {
+    font-size: 40px;
+  }
+
+  .reference-file {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .status-footer {
+    flex-direction: column;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+}
+
+.assignment-card {
+  cursor: pointer;
+}
+
+/* TEACHER SECTION */
+
+.teacher-submission-section {
+  margin-top: 40px;
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+/* TOP */
+
+.teacher-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.teacher-top h2 {
+  color: var(--text);
+}
+
+/* FILTER */
+
+.filter-row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.filter-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: var(--text);
+}
+
+.filter-box select {
+  background: var(--bg);
+  color: var(--text);
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+/* TABLE */
+
+.submission-table {
+  width: 100%;
+}
+
+/* HEADER */
+
+.table-header {
+  display: grid;
+  grid-template-columns: 2.3fr 1.5fr 1.4fr 1.5fr;
+  padding: 18px 24px;
+  background: rgba(255,255,255,0.03);
+  color: var(--text);
+  font-weight: 700;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ROW */
+
+.table-row {
+  display: grid;
+  grid-template-columns: 2.3fr 1.5fr 1.4fr 1.5fr;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  color: var(--text);
+}
+
+/* STUDENT */
+
+.student-name {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.student-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(59,130,246,0.12);
+  color: #3b82f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.table-status {
+  width: fit-content;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.table-status.onTime {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.table-status.late {
+  background: rgba(255, 204, 0, 0.15);
+  color: #ffd166;
+}
+
+.table-status.unsubmitted {
+  background: rgba(255, 0, 0, 0.12);
+  color: #ff7b7b;
+}
+
+/* FILE LINK */
+
+.submission-file-link {
+  color: #7fb0ff;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.submission-file-link:hover {
+  text-decoration: underline;
+}
+
+/* TEXT NOTE */
+
+.submission-text-note {
+  color: var(--textdim);
+  font-weight: 700;
+}
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+
+  .teacher-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .table-header,
+  .table-row {
+    grid-template-columns:
+      1.6fr 1.6fr 1fr 1fr;
+
+    font-size: 14px;
+  }
+
+}
+
+@media (max-width: 700px) {
+
+  .submission-table {
+    overflow-x: auto;
+  }
+
+  .table-header,
+  .table-row {
+    min-width: 700px;
+  }
+
+}

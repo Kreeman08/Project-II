@@ -1,0 +1,174 @@
+/* src/components/Header.css */
+.header {
+  position: fixed;
+  top: 0;
+  right: 20px;
+  left: 290px;
+  z-index: 1000;
+  width: auto;
+  max-width: 100vw;
+  height: 100px;
+  background: var(--header);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  gap: 20px;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+/* LEFT SIDE */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+  min-width: 0;
+}
+/* Logo + Text wrapper */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0px;
+}
+
+/* Logo image */
+.sidebar-logo {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+}
+
+.sidebar-brand h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+}
+/* ------------- */
+/* RIGHT SIDE */
+
+.header-left {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* SEARCH */
+
+.search-area {
+  position: relative;
+
+  flex: 1 1 300px;
+  min-width: 150px;
+  max-width: 600px;
+}
+
+.search-input {
+  width: 100%;
+  height: 40px;
+
+  padding: 0 44px;
+
+  background: var(--menu);
+  color: var(--text);
+
+  border-radius: 20px;
+  border: 1px solid transparent;
+
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: var(--text);
+}
+
+/* ICONS */
+
+.search-icon-btn,
+.clear-btn-input {
+  position: absolute;
+  top: 50%;
+
+  transform: translateY(-50%);
+}
+
+.search-icon-btn {
+  left: 16px;
+
+  background: none;
+  border: none;
+
+  cursor: pointer;
+}
+
+.search-icon {
+  font-size: 16px;
+  color: var(--text);
+}
+
+.clear-btn-input {
+  right: 16px;
+
+  background: none;
+  border: none;
+
+  font-size: 22px;
+  color: #999;
+
+  cursor: pointer;
+}
+
+.clear-btn-input:hover {
+  color: #ed2222;
+}
+
+/* THEME BUTTON */
+
+.theme-btn {
+  background: var(--header);
+  color: var(--text);
+
+  border: none;
+
+  padding: 10px 14px;
+  border-radius: 8px;
+
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.theme-btn:hover {
+  color: var(--theme);
+}
+
+/* RESPONSIVE */
+
+@media (min-width: 1200px) {
+  .header-right {
+    gap: 80px;
+  }
+
+  .search-area {
+    max-width: 550px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .search-area {
+    max-width: 480px;
+  }
+
+  .header-right {
+    gap: 100px;
+  }
+}

@@ -15,6 +15,8 @@ class AssignmentSerializer(serializers.ModelSerializer):
             'course',
             'title',
             'description',
+            'reference_text',  
+            'reference_file',
             'deadline',
             'created_by',
             'created_at',
@@ -26,6 +28,8 @@ from .models import Submission
 
 
 class SubmissionSerializer(serializers.ModelSerializer):
+    student_name = serializers.CharField(source='student.get_full_name', read_only=True)
+    student_username = serializers.CharField(source='student.username', read_only=True)
 
     class Meta:
         model = Submission
@@ -33,6 +37,8 @@ class SubmissionSerializer(serializers.ModelSerializer):
             'id',
             'assignment',
             'student',
+            'student_name',
+            'student_username',
             'file',
             'text',
             'submitted_at',
@@ -40,6 +46,8 @@ class SubmissionSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             'student',
+            'student_name',
+            'student_username',
             'marks',
             'submitted_at'
         ]

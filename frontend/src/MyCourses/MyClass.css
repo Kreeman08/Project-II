@@ -1,0 +1,71 @@
+/* src/pages/MyClass.css */
+.myclass {
+  margin-top: 70px;
+  padding: 30px;
+  color: var(--text);
+}
+
+/* TITLE */
+.course-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.back-btn {
+  width: 20px;
+  height: 20px;
+  font-size: 28px;
+  border: none;
+  background: none;
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s ease;
+  transform: translateY(-15px); 
+}
+
+.back-btn:hover {
+    color: var(--textdim);
+}
+
+.course-title {
+  font-size: 52px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  cursor: default;
+}
+
+/* NAVIGATION */
+.course-nav {
+  display: flex;
+  gap: 40px;
+  border-bottom: 1px solid var(--textdim);
+  margin-bottom: 40px;
+}
+
+.course-nav a {
+  position: relative;
+  text-decoration: none;
+  color: var(--text);
+  padding-bottom: 18px;
+  font-size: 20px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.course-nav a:hover {
+  color: var(--button);
+}
+
+.course-nav a.active {
+  color: var(--button);
+  text-decoration: underline 2.5px var(--button);
+  text-underline-offset:5px  ;
+}
+
+.course-content {
+  width: 100%;
+}

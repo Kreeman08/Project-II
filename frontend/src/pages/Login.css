@@ -1,0 +1,292 @@
+/* Login.css */
+
+.lms-auth-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg);
+  padding: 20px;
+  box-sizing: border-box;
+  font-family: Inter, Arial, sans-serif;
+}
+
+.lms-auth-card {
+  width: 100%;
+  max-width: 650px;
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 22px;
+  padding: 32px 36px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================
+   TOP HEADER INSIDE LOGIN/SIGNUP CARD
+========================================== */
+
+.lms-auth-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 26px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.lms-auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lms-auth-logo {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.lms-auth-brand h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.lms-auth-theme-btn {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 12px;
+  background: none;
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.lms-auth-theme-btn:hover {
+  color: var(--theme);
+  transform: translateY(-2px);
+}
+
+.lms-auth-theme-btn svg {
+  font-size: 18px;
+}
+
+/* ==========================================
+   TITLE & DESCRIPTION
+========================================== */
+
+.lms-auth-card h1 {
+  margin: 0;
+  color: var(--text);
+  font-size: 44px;
+  font-weight: 400;
+}
+
+.lms-auth-card > p {
+  margin: 10px 0 22px;
+  color: var(--textdim);
+  font-size: 15px;
+  line-height: 22px;
+}
+
+/* ==========================================
+   ERROR MESSAGE
+========================================== */
+
+.lms-auth-error {
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(255, 80, 80, 0.12);
+  border: 1px solid rgba(255, 80, 80, 0.25);
+  color: #ffb3b3;
+  font-size: 13px;
+}
+
+/* ==========================================
+   LABELS
+========================================== */
+
+.lms-auth-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+/* ==========================================
+   INPUT FIELDS
+========================================== */
+
+.lms-auth-field {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  background: var(--popup);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.lms-auth-field:focus-within {
+  border-color: var(--button);
+}
+
+.lms-auth-icon {
+  width: 56px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sidebar);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  flex-shrink: 0;
+}
+
+.lms-auth-icon svg {
+  color: var(--textdim);
+  font-size: 18px;
+}
+
+.lms-auth-field input {
+  flex: 1;
+  height: 50px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 400;
+  padding: 0 16px;
+}
+
+.lms-auth-field input::placeholder {
+  color: var(--textdim);
+}
+
+/* ==========================================
+   SUBMIT BUTTON
+========================================== */
+
+.lms-auth-button {
+  height: 52px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  background: var(--button);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  transition: transform 0.2s ease;
+}
+
+.lms-auth-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.lms-auth-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.lms-auth-button svg {
+  font-size: 14px;
+}
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+.lms-auth-footer {
+  margin-top: 16px;
+  text-align: center;
+  color: var(--textdim);
+  font-size: 14px;
+}
+
+.lms-auth-footer button {
+  border: none;
+  background: transparent;
+  color: var(--button);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.lms-auth-footer button:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 768px) {
+  .lms-auth-page {
+    padding: 16px;
+  }
+
+  .lms-auth-card {
+    max-width: 100%;
+    padding: 24px;
+  }
+
+  .lms-auth-card h1 {
+    font-size: 34px;
+  }
+
+  .lms-auth-brand h2 {
+    font-size: 20px;
+  }
+
+  .lms-auth-logo {
+    width: 36px;
+    height: 36px;
+  }
+
+  .lms-auth-theme-btn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .lms-auth-field,
+  .lms-auth-icon,
+  .lms-auth-field input {
+    height: 46px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lms-auth-card {
+    padding: 20px;
+  }
+
+  .lms-auth-topbar {
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+  }
+
+  .lms-auth-card h1 {
+    font-size: 28px;
+  }
+
+  .lms-auth-card > p {
+    font-size: 14px;
+  }
+}

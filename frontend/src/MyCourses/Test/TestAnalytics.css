@@ -1,0 +1,344 @@
+/* src/pages/TestAnalytics.css */
+
+.analytics-page {
+  padding: 25px;
+  background: var(--bg);
+  min-height: 100vh;
+  color: var(--text);
+}
+
+/* TITLE */
+
+.analytics-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 25px;
+}
+
+/* =========================
+   TOP CARDS
+========================= */
+
+.analytics-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+.analytics-card {
+  background: var(--card);
+  border-radius: 18px;
+  border: 1px solid var(--menu);
+  padding: 25px;
+  position: relative;
+}
+
+.card-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 22px;
+  margin-bottom: 28px;
+}
+
+.card-icon.blue {
+  background: rgba(92, 140, 253, 0.15);
+  color: var(--button);
+}
+
+.card-icon.green {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.card-icon.dark {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+}
+
+.analytics-card p {
+  font-size: 14px;
+  color: var(--textdim);
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.analytics-card h2 {
+  font-size: 54px;
+  color: var(--text);
+
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.analytics-card h2 span {
+  font-size: 24px;
+  color: var(--textdim);
+  font-weight: 500;
+}
+
+.pending-badge {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+
+  padding: 8px 14px;
+  border-radius: 10px;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* =========================
+   RESULTS TABLE
+========================= */
+
+.results-wrapper {
+  background: var(--card);
+  border-radius: 18px;
+  border: 1px solid var(--menu);
+  overflow: hidden;
+}
+
+.results-header {
+  padding: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.results-header h2 {
+  font-size: 28px;
+  color: var(--text);
+}
+
+.table-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* SEARCH */
+
+.search-box {
+  height: 50px;
+  width: 260px;
+  background: var(--bg);
+  border: 1px solid var(--menu);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  color: var(--textdim);
+}
+
+.search-box input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 15px;
+}
+
+.search-box input::placeholder {
+  color: var(--textdim);
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-group span {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--textdim);
+  white-space: nowrap;
+}
+
+/* SELECTS */
+
+.table-actions select {
+  height: 50px;
+  border-radius: 12px;
+  border: 1px solid var(--menu);
+  background: var(--bg);
+  color: var(--text);
+  padding: 0 14px;
+  font-size: 15px;
+  cursor: pointer;
+  outline: none;
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: var(--bg);
+}
+
+thead th {
+  padding: 18px 24px;
+  text-align: left;
+  font-size: 13px;
+  color: var(--textdim);
+  letter-spacing: 1px;
+}
+
+tbody tr {
+  transition: 0.2s;
+}
+
+tbody tr:hover {
+  background: var(--textselect);
+}
+
+tbody td {
+  padding: 22px 24px;
+  border-top: 1px solid var(--menu);
+  font-size: 15px;
+  color: var(--textdim);
+}
+
+.student-name {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.score {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.not-attended {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.table-footer {
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--menu);
+}
+
+.table-footer p {
+  color: var(--textdim);
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pagination button {
+  min-width: 40px;
+  height: 40px;
+
+  border-radius: 10px;
+  border: 1px solid var(--menu);
+
+  background: var(--bg);
+  color: var(--text);
+
+  cursor: pointer;
+  font-weight: 600;
+
+  transition: 0.2s;
+}
+
+.pagination button:hover {
+  background: var(--textselect);
+}
+
+.pagination .active-page {
+  background: var(--button);
+  color: white;
+  border-color: var(--button);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1000px) {
+  .analytics-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .results-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .table-actions {
+    width: 100%;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+}
+
+@media (max-width: 700px) {
+  .analytics-page {
+    padding: 15px;
+  }
+
+  .analytics-title {
+    font-size: 25px;
+  }
+
+  .analytics-card h2 {
+    font-size: 40px;
+  }
+
+  .analytics-card h2 span {
+    font-size: 20px;
+  }
+
+  .results-header h2 {
+    font-size: 22px;
+  }
+}

@@ -1,89 +1,156 @@
-import axios from 'axios';
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8000/api";
 
-export const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-const API_BASE_API_URL = `${API_BASE_URL}/api`;
+export const storageKeys = {
+  access: "academy_access_token",
+  refresh: "academy_refresh_token",
+  user: "academy_user",
+};
 
-const api = axios.create({
-  baseURL: API_BASE_API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+export function getStoredUser() {
+  const raw = localStorage.getItem(storageKeys.user);
+  return raw ? JSON.parse(raw) : null;
+}
 
-// Request interceptor to add JWT token
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
+export function saveSession(data) {
+  localStorage.setItem(storageKeys.access, data.access);
+  localStorage.setItem(storageKeys.refresh, data.refresh);
+  localStorage.setItem(storageKeys.user, JSON.stringify(data.user));
+}
+
+export function clearSession() {
+  localStorage.removeItem(storageKeys.access);
+  localStorage.removeItem(storageKeys.refresh);
+  localStorage.removeItem(storageKeys.user);
+}
+
+function authHeaders(isFormData) {
+  const token = localStorage.getItem(storageKeys.access);
+  const headers = isFormData ? {} : { "Content-Type": "application/json" };
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
   }
-);
 
-// Response interceptor to handle 401 errors
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
+  return headers;
+}
+
+export async function apiRequest(path, options = {}) {
+  const bodyIsFormData = options.body instanceof FormData;
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...options,
+    headers: {
+      ...authHeaders(bodyIsFormData),
+      ...(options.headers || {}),
+    },
+  });
+
+  const contentType = response.headers.get("content-type") || "";
+  const data = contentType.includes("application/json")
+    ? await response.json()
+    : await response.text();
+
+  if (!response.ok) {
+    const message =
+      typeof data === "string"
+        ? data
+        : data.detail || data.error || Object.values(data).flat().join(" ");
+    throw new Error(message || "Request failed");
   }
-);
 
-export default api;
+  return data;
+}
 
-export const authApi = {
-  login: (credentials) => api.post('/token/', credentials),
-  register: (payload) => api.post('/register/', payload),
-  me: () => api.get('/users/me/'),
-};
-
-export const courseApi = {
-  list: () => api.get('/courses/'),
-  create: (payload) => api.post('/courses/', payload),
-  retrieve: (id) => api.get(`/courses/${id}/`),
-  join: (courseCode) => api.post('/enrollments/join/', { course_code: courseCode }),
-};
-
-export const materialApi = {
-  list: (params) => api.get('/materials/', { params }),
-  create: (payload) =>
-    api.post('/materials/', payload, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+export const api = {
+  login: (username, password) =>
+    apiRequest("/token/", {
+      method: "POST",
+      body: JSON.stringify({ username, password }),
     }),
-};
-
-export const assignmentApi = {
-  list: (params) => api.get('/assignments/', { params }),
-  create: (payload) => api.post('/assignments/', payload),
-  submit: (payload) =>
-    api.post('/submissions/', payload, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+  register: (payload) =>
+    apiRequest("/register/", {
+      method: "POST",
+      body: JSON.stringify(payload),
     }),
-  submissions: (params) => api.get('/submissions/', { params }),
-  grade: (id, payload) => api.patch(`/submissions/${id}/`, payload),
-};
-
-export const testApi = {
-  list: (params) => api.get('/tests/', { params }),
-  create: (payload) => api.post('/tests/', payload),
-  createQuestion: (payload) => api.post('/questions/', payload),
-  createOption: (payload) => api.post('/options/', payload),
-  retrieve: (id) => api.get(`/tests/${id}/`),
-  submit: (payload) => api.post('/test-submissions/', payload),
-  result: (submissionId) => api.get(`/test-submissions/${submissionId}/result/`),
-};
-
-export const adminApi = {
-  users: () => api.get('/users/'),
-  createUser: (payload) => api.post('/users/', payload),
-  updateUser: (id, payload) => api.patch(`/users/${id}/`, payload),
-  courses: () => api.get('/courses/'),
+  me: () => apiRequest("/users/me/"),
+  courses: () => apiRequest("/courses/"),
+  createCourse: (payload) =>
+    apiRequest("/courses/", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  joinCourse: (courseCode) =>
+    apiRequest("/enrollments/join/", {
+      method: "POST",
+      body: JSON.stringify({ course_code: courseCode }),
+    }),
+  enrollments: () => apiRequest("/enrollments/"),
+  materials: () => apiRequest("/materials/"),
+  createMaterial: (formData) =>
+    apiRequest("/materials/", {
+      method: "POST",
+      body: formData,
+    }),
+  updateMaterial: (id, payload) =>
+    apiRequest(`/materials/${id}/`, {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    }),
+  deleteMaterial: (id) =>
+    apiRequest(`/materials/${id}/`, {
+      method: "DELETE",
+    }),
+  assignments: () => apiRequest("/assignments/"),
+  assignment: (id) => apiRequest(`/assignments/${id}/`),
+  createAssignment: (formData) =>
+  apiRequest("/assignments/", {
+    method: "POST",
+    body: formData,
+  }),
+  updateAssignment: (id, formData) =>
+  apiRequest(`/assignments/${id}/`, {
+    method: "PUT",
+    body: formData,
+  }),
+  deleteAssignment: (id) =>
+    apiRequest(`/assignments/${id}/`, {
+      method: "DELETE",
+    }),
+  submissions: () => apiRequest("/submissions/"),
+  createSubmission: (formData) =>
+    apiRequest("/submissions/", {
+      method: "POST",
+      body: formData,
+    }),
+  tests: () => apiRequest("/tests/"),
+  createTest: (payload) =>
+    apiRequest("/tests/", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  createQuestion: (payload) =>
+    apiRequest("/questions/", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  createOption: (payload) =>
+    apiRequest("/options/", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  submitTest: (payload) =>
+    apiRequest("/test-submissions/", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  coursePosts: () => apiRequest("/course-posts/"),
+  createCoursePost: (formData) =>
+    apiRequest("/course-posts/", {
+      method: "POST",
+      body: formData,
+    }),
+  createCoursePostReply: (payload) =>
+    apiRequest("/course-post-replies/", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
 };

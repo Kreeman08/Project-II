@@ -1,0 +1,302 @@
+/* =========================
+   MODAL OVERLAY
+========================= */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+/* =========================
+   MODAL CONTAINER
+========================= */
+
+.modal-container {
+  width: min(780px, 100%);
+
+  background: var(--popup);
+  color: var(--text);
+
+  border: 1px solid var(--menu);
+  border-radius: 12px;
+
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+
+  overflow: hidden;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.modal-header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  gap: 18px;
+
+  padding: 32px 34px 24px;
+
+  border-bottom: 1px solid var(--menu);
+}
+
+.modal-header h2 {
+  margin: 0 0 10px;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.modal-header p {
+  margin: 0;
+  font-size: 18px;
+  color: var(--textdim);
+  line-height: 1.4;
+}
+
+/* =========================
+   CLOSE BUTTON (FIXED)
+========================= */
+
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 9999;
+  width: 40px;
+  height: 40px;
+  border-color: none;
+  border-radius: 8px;
+  background: none !important;
+  color: white!important;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background: red!important;
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+.close-btn:active {
+  transform: scale(0.95);
+}
+
+/* =========================
+   BODY
+========================= */
+
+.modal-body {
+  display: grid;
+  gap: 22px;
+
+  padding: 28px 34px 24px;
+}
+
+/* =========================
+   INPUT FIELD
+========================= */
+
+.modal-field {
+  display: grid;
+  gap: 10px;
+
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--textdim);
+}
+
+.modal-field input {
+  height: 60px;
+  width: 100%;
+
+  padding: 0 18px;
+
+  border-radius: 10px;
+  border: 1px solid var(--menu);
+
+  background: var(--card);
+  color: var(--text);
+
+  font-size: 18px;
+  font-weight: 600;
+
+  outline: none;
+}
+
+.modal-field input::placeholder {
+  color: var(--textdim);
+}
+
+/* =========================
+   PERMISSION CARD
+========================= */
+
+.permission-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  padding: 18px;
+
+  border-radius: 10px;
+  border: 1px solid var(--menu);
+
+  background: var(--card);
+}
+
+.permission-card h4 {
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  color: var(--text);
+}
+
+/* =========================
+   SWITCH
+========================= */
+
+.switch {
+  position: relative;
+  width: 70px;
+  height: 38px;
+  flex-shrink: 0;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+
+  background: #3a4a63;
+  border-radius: 999px;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.slider::before {
+  content: "";
+
+  position: absolute;
+  top: 4px;
+  left: 4px;
+
+  width: 30px;
+  height: 30px;
+
+  border-radius: 50%;
+
+  background: white;
+
+  transition: 0.2s;
+}
+
+.switch input:checked + .slider {
+  background:  #5c8cfd;
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(32px);
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.modal-footer {
+  padding: 0 34px 34px;
+}
+
+.modal-primary {
+  width: 100%;
+  min-height: 64px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: linear-gradient(90deg, #3478f6, #168b80);
+
+  color: white;
+
+  font-size: 20px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.modal-primary:hover {
+  filter: brightness(1.1);
+}
+
+.modal-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =========================
+   MESSAGE
+========================= */
+
+.form-message {
+  font-size: 14px;
+  color: var(--textdim);
+}
+
+.form-message.error {
+  color: #ff6b6b;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 700px) {
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .modal-header h2 {
+    font-size: 26px;
+  }
+
+  .modal-header p {
+    font-size: 14px;
+  }
+}

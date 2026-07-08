@@ -1,0 +1,441 @@
+/* =========================
+   OVERALL POPUP
+========================= */
+
+.assignment-popup-overlay {
+  position: fixed;
+  top: 80px;
+  left: 150px;
+  right: 0;
+  bottom: 0;
+  background: none;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 1000;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.assignment-popup {
+  width: 100%;
+  max-width: 1100px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  background: var(--card);
+  border-radius: 24px;
+  padding: 34px;
+  position: relative;
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.popup-header h1 {
+  font-size: 40px;
+  color: var(--text);
+  margin: 0;
+}
+
+/* =========================
+   SECTIONS
+========================= */
+
+.popup-section {
+  margin-bottom: 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.popup-section h3 {
+  margin-bottom: 16px;
+}
+
+.popup-section label {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* =========================
+   INPUTS + TEXTAREA
+========================= */
+
+.popup-section input,
+.popup-section textarea,
+.popup-box textarea {
+  width: 100%;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 16px;
+  outline: none;
+  resize: none;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+/* 🔥 REDUCED INSTRUCTION BOX HEIGHT */
+.popup-section textarea {
+  min-height: 50px;   /* reduced from default large size */
+  max-height: 70px;
+}
+
+/* =========================
+   REFERENCE
+========================= */
+
+.popup-top-row {
+  margin-bottom: 18px;
+}
+
+.reference-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.reference-tabs button {
+  flex: 1;
+  background: var(--bg);
+  color: var(--textdim);
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.reference-tabs .active-tab {
+  background: var(--button);
+  color: white;
+}
+
+.reference-textarea {
+  min-height: 120px !important;
+}
+
+/* =========================
+   FILE UPLOAD
+========================= */
+
+.file-upload-box {
+  width: 100%;
+  min-height: 140px;
+  border: 2px dashed rgba(255,255,255,0.12);
+  border-radius: 18px;
+  background: var(--bg);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+}
+
+.upload-btn {
+  background: var(--button);
+  color: white;
+  padding: 14px 22px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.file-name {
+  color: var(--text);
+}
+
+/* =========================
+   SCHEDULING BOX (FIXED WIDTH)
+========================= */
+
+.popup-box {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-sizing: border-box;
+}
+
+/* =========================
+   DATE & TIME ROW
+========================= */
+
+.date-time-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.date-time-field {
+  flex: 1;
+  min-width: 280px;
+  position: relative;
+}
+
+.date-time-field label {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* =========================
+   INPUT BOX
+========================= */
+
+.input-icon-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 0 16px;
+  width: 100%;
+}
+
+.time-click {
+  cursor: pointer;
+}
+
+.date-click {
+  cursor: pointer;
+}
+
+.date-click input {
+  cursor: pointer;
+}
+
+.input-icon {
+  color: var(--textdim);
+}
+
+/* =========================
+   DATE INPUT
+========================= */
+
+.styled-input {
+  flex: 1;
+  background: transparent !important;
+  border: none !important;
+  color: var(--text);
+  padding: 16px 0;
+  outline: none;
+}
+
+.styled-input::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+/* =========================
+   TIME DISPLAY + POPUP
+========================= */
+
+.time-display {
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 600;
+  padding: 16px 0;
+}
+
+.time-popup {
+  position: absolute;
+  top: 85px;
+  left: 0;
+  z-index: 100;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 12px;
+
+  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+}
+
+/* =========================
+   TIME CONTROLS
+========================= */
+
+.time-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.time-control button {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.time-control input {
+  width: 60px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  outline: none;
+}
+
+.time-control input::-webkit-inner-spin-button,
+.time-control input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* =========================
+   TIME SEPARATOR
+========================= */
+
+.time-separator {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* =========================
+   AM PM
+========================= */
+
+.ampm-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ampm-toggle button {
+  width: 55px;
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  background: var(--bg);
+  color: var(--textdim);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.active-period {
+  background: var(--button) !important;
+  color: white !important;
+}
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.cancel-btn,
+.create-btn {
+  border: none;
+  border-radius: 14px;
+  padding: 14px 24px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.cancel-btn {
+  background: rgb(254, 10, 10);
+  color: white;
+}
+
+.create-btn {
+  background: var(--button);
+  color: white;
+}
+
+/* =========================
+   CLOSE BUTTON
+========================= */
+
+.close-popup-btn {
+  width: 46px;
+  height: 46px;
+  border: none;
+  border-radius: 12px;
+  background: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.close-popup-btn svg {
+  color: white;
+  font-size: 22px;
+}
+
+.close-popup-btn:hover svg {
+  color: red;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+  .date-time-row {
+    flex-direction: column;
+  }
+
+  .time-popup {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .assignment-popup {
+    padding: 22px;
+  }
+
+  .popup-actions {
+    flex-direction: column;
+  }
+
+  .cancel-btn,
+  .create-btn {
+    width: 100%;
+  }
+}

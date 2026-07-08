@@ -1,0 +1,369 @@
+/* src/styles.css */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* =========================
+   THEMES
+========================= */
+
+.dark {
+  --bg: #071225;
+  --sidebar: #101b35;
+  --header: #08152c;
+  --card: #121f3d;
+  --text: white;
+  --button: #6899ec;
+  --menu: #1d2b4d;
+  --theme: orange;
+}
+
+.light {
+  --bg: #f3f4f6;
+  --sidebar: #ffffff;
+  --header: #ffffff;
+  --card: #ffffff;
+  --text: #111827;
+  --button: #5249f9;
+  --menu: #d9dbe0;
+    --theme: #071225;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+/* =========================
+   APP
+========================= */
+
+.app {
+  display: flex;
+  min-height: 100vh;
+
+  background: var(--bg);
+  color: var(--text);
+
+  transition: 0.3s;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+    height: 100vh;
+  width: 270px;
+  background: var(--sidebar);
+
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.top {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* 👈 increases space between create-btn and menu */
+}
+
+.bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* 👈 increases space between create-btn and menu */
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  margin-top: 30px;
+}
+
+.menu button {
+  background: var(--sidebar);
+  color: var(--text);
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  text-align: left;
+  gap: 10px;
+}
+
+.menu button:hover{
+    background: var(--button);
+    color: white;
+}
+.create-btn {
+  background: var(--button);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.main-content {
+  flex: 1;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+/* HEADER */
+.header {
+  width: 100%;
+  max-width: 100vw;
+  height: 80px;
+  background: var(--header);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  gap: 20px;
+  overflow: hidden;
+}
+
+/* LEFT SIDE */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* default gap */
+  flex: 1;
+  min-width: 0;
+}
+
+/* RIGHT SIDE */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* SEARCH AREA */
+.search-area {
+  position: relative;
+  flex: 1 1 300px;
+  min-width: 150px;
+  max-width: 600px; /* default smaller width */
+}
+
+/* SEARCH INPUT */
+.search-input {
+  width: 100%;
+  height: 40px;
+  padding: 0 44px;
+  background: var(--menu);
+  color: var(--text);
+  border-radius: 20px;
+  border: 1px solid transparent;
+  outline: none;
+}
+
+/* ICONS */
+.search-icon-btn,
+.clear-btn-input {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* SEARCH ICON */
+.search-icon-btn {
+  left: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.search-icon {
+  font-size: 16px;
+  color: var(--text);
+}
+
+.search-input::placeholder {
+    color: var(--text); /* change to any color */
+}
+
+/* CLEAR BUTTON */
+.clear-btn-input {
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #999;
+  cursor: pointer;
+}
+
+.clear-btn-input:hover {
+  color: #ed2222;
+}
+
+/* THEME BUTTON */
+.theme-btn {
+  background: var(--header);
+  color: var(--text);
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.theme-btn:hover {
+  color: var(--theme);
+}
+
+@media (min-width: 1200px) {
+
+  .header-right {
+    gap: 80px; /* increased gap between Academy and search */
+  }
+
+  .search-area {
+    max-width: 550px; /* smaller search bar on full screen */
+  }
+}
+
+@media (min-width: 1600px) {
+  .search-area {
+    max-width: 480px;
+  }
+
+  .header-right {
+    gap: 100px;
+  }
+}
+/* =========================
+   myclasses
+========================= */
+
+.myclasses {
+  padding: 30px;
+}
+
+.myclasses p {
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
+  padding: 20px 0px 10px;
+
+}
+
+.page-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    flex-shrink: 0;
+}
+
+.sort-bar {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    top: 6px;
+    flex-shrink: 0;
+    text-align: right;
+    margin-left: auto;
+}
+
+.sort-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.sort-wrapper label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.sort-wrapper select {
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #090808;
+  border-radius: 4px;
+  background: var(--sidebar);
+  color: var(--text);
+}
+
+/* =========================
+   GRID
+========================= */
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 30px;
+  max-width: 1200px; /* ensures max 4 cards per row */
+  margin: 0 auto;
+}
+
+.card {
+  background: var(--sidebar);
+  border: 1px solid var(--text);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  text-align: left;
+  transition: transform 0.2s ease;
+  cursor:pointer;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card-header {
+  display: flex;
+  justify-content:space-between ;
+  align-items: center;
+  gap: 10px; /* spacing between icon and capsule */
+  margin-bottom: 20px;
+}
+
+.card-icon {
+  font-size: 32px;
+  font-weight: bold;
+  color: #e74e0c;
+}
+
+.capsule {
+  display: inline-block;
+  padding: 4px 12px;
+  background-color: var(--button);
+  color: #fff;
+  border-radius: 20px; /* pill shape */
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.card hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 10px 0;
+}
+

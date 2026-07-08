@@ -1,0 +1,258 @@
+/* Test.css */
+
+.test-page {
+  background: var(--bg);
+  min-height: 100vh;
+  padding: 20px;
+  color: var(--text);
+}
+
+/* =========================
+   SECTION HEADING
+========================= */
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 60px 0 22px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.section-heading:first-child {
+  margin-top: 10px;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.test-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 24px;
+  border: 1px solid var(--menu);
+  transition: 0.3s ease;
+}
+
+.test-card:hover {
+  transform: translateY(-2px);
+}
+
+.upcoming-card {
+  border-left: 4px solid var(--button);
+}
+
+.completed-card {
+  border-left: 4px solid var(--menu);
+}
+
+/* =========================
+   CARD TOP
+========================= */
+
+.card-top {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 18px;
+}
+
+.menu-wrapper {
+  position: relative;
+}
+
+.menu-icon {
+  color: var(--textdim);
+  cursor: pointer;
+  font-size: 15px;
+}
+
+/* =========================
+   POPUP MENU
+========================= */
+
+.popup-menu {
+  position: absolute;
+  top: 28px;
+  right: 0;
+  width: 150px;
+  background: var(--card);
+  border: 1px solid var(--menu);
+  border-radius: 12px;
+  overflow: hidden;
+  z-index: 20;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.popup-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 15px;
+  cursor: pointer;
+  color: var(--text);
+  transition: 0.2s;
+}
+
+.popup-item:hover {
+  background: var(--textselect);
+}
+
+.popup-item.delete {
+  color: #ef4444;
+}
+
+.popup-item svg {
+  font-size: 14px;
+}
+
+/* =========================
+   TEXT
+========================= */
+
+.test-card h2 {
+  font-size: 27px;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.test-card p {
+  color: var(--textdim);
+  line-height: 1.6;
+  margin-bottom: 22px;
+}
+
+/* =========================
+   DETAILS
+========================= */
+
+.details-row {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  margin-bottom: 15px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--textdim);
+  margin-bottom: 12px;
+  font-size: 15px;
+}
+
+.due-item {
+  margin-left: auto;
+}
+
+.duration {
+  margin-bottom: 24px;
+}
+
+.result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0 24px;
+  font-weight: 600;
+}
+
+.success-text {
+  color: #3b82f6;
+}
+
+.danger-text {
+  color: #ef4444;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.primary-btn,
+.secondary-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.primary-btn {
+  background: var(--button);
+  color: white;
+}
+
+.primary-btn:hover {
+  opacity: 0.9;
+}
+
+.secondary-btn {
+  background: transparent;
+  border: 1px solid var(--menu);
+  color: var(--text);
+}
+
+.secondary-btn:hover {
+  background: var(--textselect);
+}
+
+/* =========================
+   FLOATING BUTTON
+========================= */
+
+.floating-btn {
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: none;
+  background: var(--button);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: 0.3s ease;
+}
+
+.floating-btn:hover {
+  transform: scale(1.06);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+  .details-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  .due-item {
+    margin-left: 0;
+  }
+
+  .test-card h2 {
+    font-size: 22px;
+  }
+
+  .section-heading {
+    font-size: 20px;
+  }
+}

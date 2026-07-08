@@ -1,0 +1,101 @@
+/* src/components/Sidebar.css */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 270px;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--sidebar);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 900;
+}
+
+.top {
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+/* Logo + Text wrapper */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0px;
+}
+
+/* Logo image */
+.sidebar-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+/* Optional: style text */
+.sidebar-brand h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.menu button {
+  background: var(--sidebar);
+  color: var(--text);
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  text-align: left;
+  gap: 10px;
+}
+
+.menu button:hover {
+  background: var(--button);
+  color: white;
+}
+
+
+/* ACTIVE SIDEBAR BUTTON */
+.menu a.active button {
+  background: var(--button);
+  color: white;
+}
+
+.create-btn {
+  background: var(--button);
+  color: var(--text);
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.create-btn:hover{
+  transform: scale(1.05);
+}
+.menu a {
+  text-decoration: none;
+}
+
