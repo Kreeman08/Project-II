@@ -7,7 +7,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'password', 'role', 'is_active']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'password', 'is_active']
+        read_only_fields = ['is_active']
 
     def create(self, validated_data):
         password = validated_data.pop('password')
@@ -30,7 +31,6 @@ class LMSJWTSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        token['role'] = user.role
         token['name'] = user.get_full_name() or user.username
         token['username'] = user.username
         return token
@@ -48,7 +48,6 @@ class LMSJWTSerializer(TokenObtainPairSerializer):
             'username': self.user.username,
             'email': self.user.email,
             'name': self.user.get_full_name() or self.user.username,
-            'role': self.user.role,
             'is_active': self.user.is_active,
         }
         return data

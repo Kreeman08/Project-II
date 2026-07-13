@@ -1,211 +1,216 @@
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework import serializers, status
+from django.db import transaction
 from django.db.models import Q
+from django.utils import timezone
+from rest_framework import serializers, viewsets
+from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
-from .models import Test, Question, Option, TestSubmission, Answer
-from .serializers import *
+from courses.models import Enrollment, Notification
+from courses.notifications import display_name
+from .models import Answer, Option, Question, Test, TestSubmission
+from .serializers import (
+    AnswerSerializer,
+    OptionSerializer,
+    QuestionSerializer,
+    TestSerializer,
+    TestSubmissionSerializer,
+)
 
-from courses.models import Enrollment
+
+def ensure_course_owner(user, course):
+    if course.teacher_id != user.id:
+        raise PermissionDenied('Only the teacher who owns this course can manage its tests.')
 
 
-# ================= TEST =================
+def ensure_editable(test):
+    if test.published:
+        raise serializers.ValidationError(
+            {'detail': 'Unpublish this test before changing its questions or choices.'}
+        )
+
+
 class TestViewSet(viewsets.ModelViewSet):
-
-    queryset = Test.objects.all()
     serializer_class = TestSerializer
-
-    def get_permissions(self):
-        return [IsAuthenticated()]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-
         user = self.request.user
-
-        if user.role == 'admin':
-            return Test.objects.all()
-
-        enrolled_courses = Enrollment.objects.filter(
-            student=user
-        ).values_list('course_id', flat=True)
-
         return Test.objects.filter(
-            Q(course__teacher=user) | Q(course_id__in=enrolled_courses)
-        ).distinct()
+            Q(course__teacher=user) | Q(published=True, course__enrollments__student=user),
+        ).prefetch_related('questions__options').distinct()
 
     def perform_create(self, serializer):
-        course = serializer.validated_data.get('course')
-        if course.teacher != self.request.user:
-            raise serializers.ValidationError(
-                {'course': 'Only the class teacher can create tests.'}
-            )
-        if self.request.user.role != 'teacher':
-            self.request.user.role = 'teacher'
-            self.request.user.save(update_fields=['role'])
-        serializer.save(created_by=self.request.user)
+        course = serializer.validated_data['course']
+        ensure_course_owner(self.request.user, course)
+        serializer.save(created_by=self.request.user, published=False)
+
+    def perform_update(self, serializer):
+        ensure_course_owner(self.request.user, serializer.instance.course)
+        was_published = serializer.instance.published
+        test = serializer.save()
+        if not was_published and test.published:
+            Notification.objects.bulk_create([
+                Notification(
+                    recipient=enrollment.student,
+                    course=test.course,
+                    kind='test_added',
+                    message=f'New test in {test.course.name}: {test.title}.',
+                )
+                for enrollment in Enrollment.objects.filter(course=test.course).select_related('student')
+            ])
+
+    def perform_destroy(self, instance):
+        ensure_course_owner(self.request.user, instance.course)
+        instance.delete()
 
 
-# ================= QUESTION =================
 class QuestionViewSet(viewsets.ModelViewSet):
-    queryset = Question.objects.all()
     serializer_class = QuestionSerializer
-
-    def get_permissions(self):
-        return [IsAuthenticated()]
-
-    def perform_create(self, serializer):
-        test = serializer.validated_data.get('test')
-        if test.course.teacher != self.request.user:
-            raise serializers.ValidationError(
-                {'test': 'Only the class teacher can add questions.'}
-            )
-        serializer.save()
-
-
-# ================= OPTION =================
-class OptionViewSet(viewsets.ModelViewSet):
-    queryset = Option.objects.all()
-    serializer_class = OptionSerializer
-
-    def get_permissions(self):
-        return [IsAuthenticated()]
-
-    def perform_create(self, serializer):
-        question = serializer.validated_data.get('question')
-        if question.test.course.teacher != self.request.user:
-            raise serializers.ValidationError(
-                {'question': 'Only the class teacher can add options.'}
-            )
-        serializer.save()
-
-
-# ================= SUBMISSION (AUTO GRADING) =================
-class TestSubmissionViewSet(viewsets.ModelViewSet):
-
-    queryset = TestSubmission.objects.all()
-    serializer_class = TestSubmissionSerializer
-
-    def get_permissions(self):
-        return [IsAuthenticated()]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-
-        user = self.request.user
-
-        if user.role != 'admin':
-            return TestSubmission.objects.filter(
-                Q(student=user) | Q(test__course__teacher=user)
-            ).distinct()
-
-        return TestSubmission.objects.all()
+        return Question.objects.filter(
+            test__course__teacher=self.request.user,
+        ).prefetch_related('options')
 
     def perform_create(self, serializer):
+        test = serializer.validated_data['test']
+        ensure_course_owner(self.request.user, test.course)
+        ensure_editable(test)
+        serializer.save()
 
+    def perform_update(self, serializer):
+        ensure_course_owner(self.request.user, serializer.instance.test.course)
+        ensure_editable(serializer.instance.test)
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        ensure_course_owner(self.request.user, instance.test.course)
+        ensure_editable(instance.test)
+        instance.delete()
+
+
+class OptionViewSet(viewsets.ModelViewSet):
+    serializer_class = OptionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Option.objects.filter(
+            question__test__course__teacher=self.request.user,
+        )
+
+    def perform_create(self, serializer):
+        question = serializer.validated_data['question']
+        ensure_course_owner(self.request.user, question.test.course)
+        ensure_editable(question.test)
+        serializer.save()
+
+    def perform_update(self, serializer):
+        ensure_course_owner(self.request.user, serializer.instance.question.test.course)
+        ensure_editable(serializer.instance.question.test)
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        ensure_course_owner(self.request.user, instance.question.test.course)
+        ensure_editable(instance.question.test)
+        instance.delete()
+
+
+class TestSubmissionViewSet(viewsets.ModelViewSet):
+    serializer_class = TestSubmissionSerializer
+    permission_classes = [IsAuthenticated]
+    http_method_names = ['get', 'post', 'head', 'options']
+
+    def get_queryset(self):
         user = self.request.user
-        test_id = self.request.data.get("test")
+        return TestSubmission.objects.filter(
+            Q(student=user) | Q(test__course__teacher=user)
+        ).select_related('student', 'test').distinct()
 
-        # validate test exists
-        try:
-            test = Test.objects.get(id=test_id)
-        except Test.DoesNotExist:
-            raise serializers.ValidationError({"test": "Test not found"})
+    def perform_create(self, serializer):
+        user = self.request.user
+        test = serializer.validated_data['test']
+        if test.course.teacher_id == user.id:
+            raise PermissionDenied('Course teachers cannot submit their own tests.')
+        if not test.published:
+            raise serializers.ValidationError({'test': 'This test is not published.'})
+        if test.deadline and timezone.now() > test.deadline:
+            raise serializers.ValidationError({'test': 'The deadline for this test has passed.'})
+        if not Enrollment.objects.filter(student=user, course=test.course).exists():
+            raise serializers.ValidationError({'test': 'You are not enrolled in this course.'})
+        if TestSubmission.objects.filter(student=user, test=test).exists():
+            raise serializers.ValidationError({'test': 'You have already submitted this test.'})
 
-        # 🔐 ENROLLMENT CHECK
-        is_enrolled = Enrollment.objects.filter(
-            student=user,
-            course=test.course
-        ).exists()
+        answers_data = self.request.data.get('answers')
+        if not isinstance(answers_data, list):
+            raise serializers.ValidationError({'answers': 'Submit one answer for every question.'})
 
-        if not is_enrolled:
+        questions = list(test.questions.prefetch_related('options'))
+        question_ids = {question.id for question in questions}
+        submitted_ids = [answer.get('question') for answer in answers_data]
+        if len(submitted_ids) != len(set(submitted_ids)) or not set(submitted_ids).issubset(question_ids):
             raise serializers.ValidationError(
-                {"test": "You are not enrolled in this course"}
+                {'answers': 'Each submitted answer must belong to this test and appear only once.'}
             )
 
-        submission = serializer.save(student=user)
-
-        answers_data = self.request.data.get("answers", [])
-
+        answers_to_create = []
         total_marks = 0
+        questions_by_id = {question.id: question for question in questions}
+        for answer_data in answers_data:
+            question_id = answer_data.get('question')
+            option_id = answer_data.get('selected_option')
+            question = questions_by_id[question_id]
+            option = next((item for item in question.options.all() if item.id == option_id), None)
+            if option is None:
+                raise serializers.ValidationError(
+                    {'answers': f'Answer choice does not belong to question {question_id}.'}
+                )
+            answers_to_create.append((question, option))
+            total_marks += int(option.is_correct)
 
-        for ans in answers_data:
+        with transaction.atomic():
+            submission = serializer.save(student=user, marks=total_marks)
+            Answer.objects.bulk_create([
+                Answer(submission=submission, question=question, selected_option=option)
+                for question, option in answers_to_create
+            ])
+        Notification.objects.create(
+            recipient=test.course.teacher,
+            course=test.course,
+            kind='test_submitted',
+            message=f'{display_name(user)} submitted {test.title}.',
+        )
 
-            question_id = ans.get("question")
-            selected_option_id = ans.get("selected_option")
-
-            if not question_id or not selected_option_id:
-                continue
-
-            # get correct option
-            correct_option = Option.objects.filter(
-                question_id=question_id,
-                is_correct=True
-            ).first()
-
-            # scoring (+1 logic)
-            if correct_option and correct_option.id == selected_option_id:
-                total_marks += 1
-
-            # save answer
-            Answer.objects.create(
-                submission=submission,
-                question_id=question_id,
-                selected_option_id=selected_option_id
-            )
-
-        submission.marks = total_marks
-        submission.save()
-
-
-    # ================= RESULT API =================
     @action(detail=True, methods=['get'])
     def result(self, request, pk=None):
-
         submission = self.get_object()
-
-        # 🔐 SECURITY: only owner or teacher/admin
-        if request.user.role == 'student' and submission.student != request.user:
-            return Response(
-                {"error": "Not allowed"},
-                status=status.HTTP_403_FORBIDDEN
-            )
-
-        answers = Answer.objects.filter(submission=submission)
-
+        answers = submission.answers.select_related('question', 'selected_option').all()
         result_data = []
-
-        for ans in answers:
-
-            correct_option = Option.objects.filter(
-                question=ans.question,
-                is_correct=True
-            ).first()
-
+        for answer in answers:
+            correct_option = answer.question.options.filter(is_correct=True).first()
             result_data.append({
-                "question": ans.question.text,
-                "selected": ans.selected_option.text if ans.selected_option else None,
-                "correct": correct_option.text if correct_option else None,
-                "is_correct": (
-                    ans.selected_option_id == correct_option.id
-                    if correct_option else False
-                )
+                'question': answer.question.text,
+                'selected': answer.selected_option.text,
+                'correct': correct_option.text if correct_option else None,
+                'is_correct': answer.selected_option_id == getattr(correct_option, 'id', None),
             })
-
         return Response({
-            "test": submission.test.title,
-            "student": submission.student.username,
-            "marks": submission.marks,
-            "total_questions": answers.count(),
-            "answers": result_data
+            'test': submission.test.title,
+            'student': submission.student.username,
+            'marks': submission.marks,
+            'total_questions': submission.test.questions.count(),
+            'answers': result_data,
         })
 
 
-# ================= ANSWER =================
-class AnswerViewSet(viewsets.ModelViewSet):
-
-    queryset = Answer.objects.all()
+class AnswerViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = AnswerSerializer
+    permission_classes = [IsAuthenticated]
 
-    def get_permissions(self):
-        return [IsAuthenticated()]
+    def get_queryset(self):
+        user = self.request.user
+        return Answer.objects.filter(
+            Q(submission__student=user) | Q(submission__test__course__teacher=user)
+        ).distinct()

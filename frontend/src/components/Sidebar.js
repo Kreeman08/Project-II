@@ -1,23 +1,33 @@
 // Sidebar.jsx
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faGraduationCap,
     faBook,
     faClipboard,
-    faCircleQuestion,
     faArrowRightFromBracket,
     faPlus,
     faCircleUser,
+    faBell,
 } from "@fortawesome/free-solid-svg-icons";
 
 import "./Sidebar.css";
 import logo from "./logo.png";
-import { useAuth } from "../context/AuthContext";
+import { api } from "../services/api";
 
-function Sidebar({ openCreateModal, openJoinModal }) {
-    const { logout } = useAuth();
+function Sidebar({ openCreateModal, openJoinModal, onLogoutRequest }) {
+    const [unreadCount, setUnreadCount] = useState(0);
+    const loadUnread = useCallback(async () => {
+        try { setUnreadCount((await api.notifications()).filter((item) => !item.is_read).length); } catch { setUnreadCount(0); }
+    }, []);
+    useEffect(() => {
+        loadUnread();
+        const refresh = () => loadUnread();
+        window.addEventListener("notifications:changed", refresh);
+        const interval = window.setInterval(loadUnread, 30000);
+        return () => { window.removeEventListener("notifications:changed", refresh); window.clearInterval(interval); };
+    }, [loadUnread]);
 
     return (
         <aside className="sidebar">
@@ -59,16 +69,15 @@ function Sidebar({ openCreateModal, openJoinModal }) {
                             My Assessments
                         </button>
                     </NavLink>
-{/* 
                     <NavLink to="/notifications">
                         <button>
                             <span className="icon">
                                 <FontAwesomeIcon icon={faBell} />
                             </span>
 
-                            Notifications
+                            Notifications {unreadCount > 0 && <span className="notification-badge">{unreadCount > 99 ? "99+" : unreadCount}</span>}
                         </button>
-                    </NavLink> */}
+                    </NavLink>
 
                 </div>
             </div>
@@ -105,7 +114,7 @@ function Sidebar({ openCreateModal, openJoinModal }) {
                         Help
                     </button> */}
 
-                    <button onClick={logout}>
+                    <button onClick={onLogoutRequest}>
                         <span className="icon">
                             <FontAwesomeIcon
                                 icon={faArrowRightFromBracket}

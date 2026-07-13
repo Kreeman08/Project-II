@@ -1,6 +1,6 @@
 /* src/pages/MyClass.css */
 .myclass {
-  margin-top: 70px;
+  margin-top: 0;
   padding: 30px;
   color: var(--text);
 }
@@ -68,4 +68,11 @@
 
 .course-content {
   width: 100%;
+}
+
+@media (max-width: 700px) {
+  .myclass { padding: 12px 0; }
+  .course-title { font-size: 34px; }
+  .course-nav { gap: 20px; overflow-x: auto; }
+  .course-nav a { font-size: 16px; white-space: nowrap; }
 }

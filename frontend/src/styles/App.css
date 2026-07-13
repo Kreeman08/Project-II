@@ -18,7 +18,7 @@
   margin-left: 270px;
   width: calc(100% - 270px);
   min-height: 100vh;
-  padding: 30px;
+  padding: 120px 30px 30px;
 }
 
 .main-content.no-sidebar {
@@ -228,3 +228,9 @@
   display: flex;
   min-height: 100vh;
 }
+
+@media (max-width: 760px) {
+  .main-content { margin-left: 0; width: 100%; padding: 86px 16px 20px; }
+}
+
+.logout-overlay { position:fixed; inset:0; z-index:3000; display:grid; place-items:center; padding:20px; background:rgba(0,0,0,.5); animation:fadeIn .16s ease-out; }.logout-dialog { width:min(410px, 100%); padding:26px; border:1px solid var(--menu); border-radius:16px; background:var(--card); color:var(--text); box-shadow:0 22px 55px rgba(0,0,0,.3); }.logout-dialog h2 { margin:0; }.logout-dialog p { margin:12px 0 24px; color:var(--textdim); }.logout-dialog > div { display:flex; justify-content:flex-end; gap:10px; }.logout-dialog button { border:1px solid var(--menu); border-radius:8px; background:transparent; color:var(--text); padding:10px 14px; font-weight:700; cursor:pointer; }.logout-dialog .logout-dialog__confirm { border-color:#dc2626; background:#dc2626; color:#fff; } @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }

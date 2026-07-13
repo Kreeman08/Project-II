@@ -243,3 +243,9 @@
     bottom: 20px;
   }
 }
+
+.form-message.success { background:rgba(34,197,94,.14); color:#86efac; padding:14px; border-radius:12px; margin-bottom:20px; }
+.upload-progress { margin-bottom:16px; padding:12px 14px; border-radius:10px; background:var(--card); color:var(--textdim); border:1px solid var(--menu); }
+.resources-help,.material-meta { color:var(--textdim); }
+.resources-help { margin:6px 0 0; }
+.material-meta { margin-top:6px; font-size:.78rem !important; }

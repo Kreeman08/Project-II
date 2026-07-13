@@ -4,7 +4,8 @@ from .models import Assignment, Submission
 from .serializers import AssignmentSerializer, SubmissionSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
-from courses.models import Enrollment
+from courses.models import Enrollment, Notification
+from courses.notifications import display_name
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 
@@ -17,7 +18,7 @@ class AssignmentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if user.role == 'admin':
+        if user.is_superuser:
             return Assignment.objects.all()
 
         return Assignment.objects.filter(
@@ -33,7 +34,16 @@ class AssignmentViewSet(viewsets.ModelViewSet):
             raise serializers.ValidationError(
                 {'course': 'Only the class teacher can create assignments.'}
             )
-        serializer.save(created_by=self.request.user)
+        assignment = serializer.save(created_by=self.request.user)
+        Notification.objects.bulk_create([
+            Notification(
+                recipient=enrollment.student,
+                course=course,
+                kind='assignment_added',
+                message=f'New assignment in {course.name}: {assignment.title}.',
+            )
+            for enrollment in Enrollment.objects.filter(course=course).select_related('student')
+        ])
 
     def perform_update(self, serializer):
         assignment = self.get_object()
@@ -58,12 +68,9 @@ class SubmissionViewSet(viewsets.ModelViewSet):
 
         user = self.request.user
 
-        if user.role != 'admin':
-            return Submission.objects.filter(
-                Q(student=user) | Q(assignment__course__teacher=user)
-            ).distinct()
-
-        return Submission.objects.all()
+        if user.is_superuser:
+            return Submission.objects.all()
+        return Submission.objects.filter(Q(student=user) | Q(assignment__course__teacher=user)).distinct()
 
     def get_permissions(self):
         return [IsAuthenticated()]
@@ -77,9 +84,18 @@ class SubmissionViewSet(viewsets.ModelViewSet):
                 {'assignment': 'Teachers cannot submit their own assignment.'}
             )
 
-        if not Enrollment.objects.filter(course=assignment.course, student=user).exists():
+        enrollment = Enrollment.objects.filter(course=assignment.course, student=user).first()
+        if not enrollment:
             raise serializers.ValidationError(
                 {'assignment': 'You are not enrolled in this class.'}
             )
+        if not enrollment.can_submit_assignments:
+            raise serializers.ValidationError({'assignment': 'Your assignment submission permission is disabled for this class.'})
 
-        serializer.save(student=user)
+        submission = serializer.save(student=user)
+        Notification.objects.create(
+            recipient=assignment.course.teacher,
+            course=assignment.course,
+            kind='assignment_submitted',
+            message=f'{display_name(user)} submitted {assignment.title}.',
+        )

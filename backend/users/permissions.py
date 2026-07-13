@@ -5,7 +5,7 @@ class IsTeacher(BasePermission):
     def has_permission(self, request, view):
         return (
             request.user.is_authenticated and
-            request.user.role == 'teacher'
+            request.user.is_authenticated
         )
 
 
@@ -13,7 +13,7 @@ class IsStudent(BasePermission):
     def has_permission(self, request, view):
         return (
             request.user.is_authenticated and
-            request.user.role == 'student'
+            request.user.is_authenticated
         )
 
 
@@ -21,5 +21,5 @@ class IsAdmin(BasePermission):
     def has_permission(self, request, view):
         return (
             request.user.is_authenticated and
-            request.user.role == 'admin'
+            request.user.is_superuser
         )

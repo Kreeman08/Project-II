@@ -151,6 +151,9 @@
   color: var(--theme);
 }
 
+.theme-btn--toggle { transition: transform .2s ease, color .2s ease; }.theme-btn--toggle:hover { transform: rotate(18deg); }
+.profile-menu { position:relative; }.profile-trigger { display:flex; align-items:center; gap:8px; border:0; border-radius:10px; background:transparent; color:var(--text); padding:5px; cursor:pointer; }.profile-avatar { display:grid; place-items:center; width:32px; height:32px; border-radius:50%; background:var(--button); color:#fff; font-weight:800; }.profile-avatar--large { width:42px; height:42px; flex:none; }.profile-dropdown { position:absolute; top:calc(100% + 12px); right:0; width:280px; padding:14px; border:1px solid var(--menu); border-radius:14px; background:var(--card); color:var(--text); box-shadow:0 16px 40px rgba(0,0,0,.22); animation:profileIn .16s ease-out; }.profile-dropdown__identity { display:flex; gap:11px; padding:4px 3px 14px; border-bottom:1px solid var(--menu); }.profile-dropdown__identity strong,.profile-dropdown__identity span,.profile-dropdown__identity em { display:block; }.profile-dropdown__identity span { margin-top:3px; color:var(--textdim); font-size:.85rem; overflow-wrap:anywhere; }.profile-dropdown__identity em { display:inline-block; margin-top:7px; padding:3px 7px; border-radius:99px; background:rgba(92,140,253,.14); color:var(--button); font-size:.75rem; font-style:normal; font-weight:700; }.profile-dropdown > button { display:flex; align-items:center; gap:8px; width:100%; margin-top:12px; padding:10px; border:0; border-radius:8px; background:transparent; color:#dc2626; font-weight:800; text-align:left; cursor:pointer; }.profile-dropdown > button:hover { background:rgba(220,38,38,.08); } @keyframes profileIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+
 /* RESPONSIVE */
 
 @media (min-width: 1200px) {
@@ -171,4 +174,8 @@
   .header-right {
     gap: 100px;
   }
+}
+
+@media (max-width: 760px) {
+  .header { left: 0; right: 0; height: 70px; padding: 0 14px; }.header .sidebar-brand h2 { display:none; }.header .sidebar-logo { width:34px; height:34px; }.search-area { min-width:0; }.search-input { height:36px; }.profile-dropdown { right:-6px; }.header-right { gap:10px; }
 }

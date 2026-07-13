@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from assignments.views import AssignmentViewSet, SubmissionViewSet
-from courses.views import CoursePostReplyViewSet, CoursePostViewSet, CourseViewSet, EnrollmentViewSet
+from courses.views import CoursePostReplyViewSet, CoursePostViewSet, CourseViewSet, EnrollmentViewSet, LeaveCourseRequestViewSet, LeaveRequestViewSet, NotificationViewSet
 from materials.views import MaterialViewSet
 from tests_app.views import AnswerViewSet, OptionViewSet, QuestionViewSet, TestSubmissionViewSet, TestViewSet
 from users.views import LMSJWTView, RegisterView, UserViewSet
@@ -20,6 +20,9 @@ router.register(r'courses', CourseViewSet, basename='courses')
 router.register(r'enrollments', EnrollmentViewSet, basename='enrollments')
 router.register(r'course-posts', CoursePostViewSet, basename='course-posts')
 router.register(r'course-post-replies', CoursePostReplyViewSet, basename='course-post-replies')
+router.register(r'notifications', NotificationViewSet, basename='notifications')
+router.register(r'leave-requests', LeaveRequestViewSet, basename='leave-requests')
+router.register(r'leave-course-requests', LeaveCourseRequestViewSet, basename='leave-course-requests')
 router.register(r'materials', MaterialViewSet, basename='materials')
 router.register(r'assignments', AssignmentViewSet, basename='assignments')
 router.register(r'submissions', SubmissionViewSet, basename='submissions')

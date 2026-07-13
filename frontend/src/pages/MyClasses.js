@@ -19,6 +19,7 @@ function MyClasses() {
   const { user } = useAuth();
   const [courses, setCourses] = useState([]);
   const [sort, setSort] = useState("az");
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -41,14 +42,21 @@ function MyClasses() {
     return () => window.removeEventListener("courses:changed", loadCourses);
   }, []);
 
+  useEffect(() => {
+    const handleSearch = (event) => setSearchQuery(event.detail || "");
+    window.addEventListener("classes:search", handleSearch);
+    return () => window.removeEventListener("classes:search", handleSearch);
+  }, []);
+
   const sortedCourses = useMemo(() => {
-    return [...courses].sort((a, b) => {
+    const query = searchQuery.trim().toLowerCase();
+    return courses.filter((course) => !query || [course.name, course.teacher_name, course.course_code].some((value) => value?.toLowerCase().includes(query))).sort((a, b) => {
       if (sort === "za") {
         return b.name.localeCompare(a.name);
       }
       return a.name.localeCompare(b.name);
     });
-  }, [courses, sort]);
+  }, [courses, sort, searchQuery]);
 
   return (
     <div className="myclasses-page">
@@ -57,7 +65,7 @@ function MyClasses() {
           Welcome back, {user?.first_name || user?.username}.
         </h1>
         <p className="myclasses-subtitle">
-          Here are your active classes from the backend.
+          Here are your active classes.
         </p>
       </div>
 
@@ -77,7 +85,7 @@ function MyClasses() {
       {loading && <div className="page-state">Loading classes...</div>}
       {error && <div className="form-message error">{error}</div>}
       {!loading && !error && sortedCourses.length === 0 && (
-        <div className="page-state">No classes found.</div>
+        <div className="page-state">{searchQuery ? `No classes match “${searchQuery}”.` : "No classes found."}</div>
       )}
 
       <div className="myclasses-grid">

@@ -14,7 +14,6 @@ class Material(models.Model):
     uploaded_by = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        limit_choices_to={'role': 'teacher'}
     )
 
     title = models.CharField(max_length=255)
@@ -22,6 +21,10 @@ class Material(models.Model):
     file = models.FileField(upload_to='materials/', blank=True, null=True)
 
     link = models.URLField(blank=True, null=True)
+
+    file_type = models.CharField(max_length=100, blank=True)
+
+    file_size = models.PositiveBigIntegerField(default=0)
 
     uploaded_at = models.DateTimeField(auto_now_add=True)
 

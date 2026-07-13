@@ -7,6 +7,10 @@ class Test(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='tests')
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
+    published = models.BooleanField(default=False)
+    timer_enabled = models.BooleanField(default=False)
+    time_limit_minutes = models.PositiveIntegerField(blank=True, null=True)
+    deadline = models.DateTimeField(blank=True, null=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 

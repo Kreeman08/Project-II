@@ -37,7 +37,7 @@ export function AuthProvider({ children }) {
       },
       register: async (payload) => {
         const username = payload.username || payload.email;
-        await api.register({ ...payload, username, role: "student" });
+        await api.register({ ...payload, username });
         const data = await api.login(payload.email, payload.password);
         saveSession(data);
         setUser(data.user);

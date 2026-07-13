@@ -14,12 +14,13 @@ class Course(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     course_code = models.CharField(max_length=12, unique=True, blank=True)
+    allow_student_comments = models.BooleanField(default=True)
+    allow_student_file_sharing = models.BooleanField(default=True)
 
     teacher = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='courses',
-        limit_choices_to={'role': 'teacher'}
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -42,7 +43,6 @@ class Enrollment(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='enrollments',
-        limit_choices_to={'role': 'student'}
     )
 
     course = models.ForeignKey(
@@ -52,6 +52,9 @@ class Enrollment(models.Model):
     )
 
     enrolled_at = models.DateTimeField(auto_now_add=True)
+    can_comment = models.BooleanField(default=True)
+    can_share_files = models.BooleanField(default=True)
+    can_submit_assignments = models.BooleanField(default=True)
 
     class Meta:
         unique_together = ['student', 'course']
@@ -101,3 +104,75 @@ class CoursePostReply(models.Model):
 
     def __str__(self):
         return f"Reply by {self.author.username}"
+
+
+class Notification(models.Model):
+    recipient = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='notifications'
+    )
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        related_name='notifications',
+        blank=True,
+        null=True,
+    )
+    kind = models.CharField(max_length=50)
+    message = models.CharField(max_length=500)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+
+class LeaveRequest(models.Model):
+    class Status(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        APPROVED = 'approved', 'Approved'
+        REJECTED = 'rejected', 'Rejected'
+
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='leave_requests')
+    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='leave_requests')
+    start_date = models.DateField()
+    end_date = models.DateField()
+    reason = models.TextField()
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
+    reviewed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='reviewed_leave_requests')
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{self.student.username} - {self.course.name} ({self.status})'
+
+
+class LeaveCourseRequest(models.Model):
+    class Status(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        APPROVED = 'approved', 'Approved'
+        DECLINED = 'declined', 'Declined'
+
+    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='leave_course_requests')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='leave_course_requests')
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_leave_course_requests')
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['student', 'course'],
+                condition=models.Q(status='pending'),
+                name='one_pending_leave_course_request_per_student_course',
+            )
+        ]
+
+    def __str__(self):
+        return f'{self.student.username} leaving {self.course.name} ({self.status})'

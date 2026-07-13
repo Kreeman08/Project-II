@@ -6,14 +6,13 @@ class User(AbstractUser):
 
     ROLE_CHOICES = (
         ('admin', 'Admin'),
-        ('teacher', 'Teacher'),
-        ('student', 'Student'),
+        ('user', 'User'),
     )
 
     role = models.CharField(
         max_length=20,
         choices=ROLE_CHOICES,
-        default='student'
+        default='user'
     )
 
     def save(self, *args, **kwargs):
@@ -22,4 +21,4 @@ class User(AbstractUser):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.username} ({self.role})"
+        return self.username

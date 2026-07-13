@@ -35,6 +35,30 @@
   color: var(--text);
 }
 
+.attempt-header h2 small {
+  display: block;
+  margin-top: 4px;
+  color: var(--textdim);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.test-information {
+  max-width: 820px;
+  margin: 28px auto;
+  padding: 32px;
+  border: 1px solid var(--menu);
+  border-radius: 18px;
+  background: var(--card);
+  color: var(--text);
+}
+
+.test-information__eyebrow { margin: 0; color: var(--button); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.test-information h1 { margin: 10px 0 8px; }.test-information__description { color: var(--textdim); line-height: 1.55; }
+.test-information__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 28px 0; }
+.test-information__item { padding: 14px; border: 1px solid var(--menu); border-radius: 11px; background: var(--bg); }.test-information__item span,.test-information__item strong { display: block; }.test-information__item span { color: var(--textdim); font-size: .8rem; }.test-information__item strong { margin-top:5px; }
+.test-information__instructions { padding: 18px; border-radius: 12px; background: var(--header); }.test-information__instructions h2 { margin-top: 0; font-size: 1rem; }.test-information__instructions ul { margin: 0; padding-left: 20px; color: var(--textdim); line-height: 1.7; }.test-information__actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; }
+
 .save-btn {
   height: 42px;
   padding: 0 16px;
@@ -420,5 +444,10 @@
   .option-item span {
     font-size: 15px;
   }
+
+  .test-information { margin: 16px; padding: 22px; }
+  .test-information__grid { grid-template-columns: 1fr; }
+  .test-information__actions { flex-direction: column-reverse; }
+  .test-information__actions button { width: 100%; justify-content: center; }
 }
 
