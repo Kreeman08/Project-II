@@ -186,20 +186,45 @@ class TestSubmissionViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'])
     def result(self, request, pk=None):
         submission = self.get_object()
-        answers = submission.answers.select_related('question', 'selected_option').all()
+        answers_by_question_id = {
+            answer.question_id: answer
+            for answer in submission.answers.select_related('question', 'selected_option')
+        }
+        questions = submission.test.questions.prefetch_related('options').order_by('id')
         result_data = []
-        for answer in answers:
-            correct_option = answer.question.options.filter(is_correct=True).first()
+        for question_number, question in enumerate(questions, start=1):
+            answer = answers_by_question_id.get(question.id)
+            selected_option = answer.selected_option if answer else None
+            correct_option = next(
+                (option for option in question.options.all() if option.is_correct),
+                None,
+            )
+            is_correct = (
+                selected_option is not None
+                and selected_option.id == getattr(correct_option, 'id', None)
+            )
             result_data.append({
-                'question': answer.question.text,
-                'selected': answer.selected_option.text,
+                'question_number': question_number,
+                'question_id': question.id,
+                'question_text': question.text,
+                'question': question.text,
+                'student_answer': selected_option.text if selected_option else None,
+                'selected': selected_option.text if selected_option else None,
                 'correct': correct_option.text if correct_option else None,
-                'is_correct': answer.selected_option_id == getattr(correct_option, 'id', None),
+                'correct_answer': correct_option.text if correct_option else None,
+                'selected_option_id': selected_option.id if selected_option else None,
+                'correct_option_id': correct_option.id if correct_option else None,
+                'marks_obtained': 1 if is_correct else 0,
+                'is_correct': is_correct,
             })
         return Response({
+            'submission_id': submission.id,
             'test': submission.test.title,
+            'test_id': submission.test_id,
             'student': submission.student.username,
+            'student_name': submission.student.get_full_name() or submission.student.username,
             'marks': submission.marks,
+            'total_marks': submission.test.questions.count(),
             'total_questions': submission.test.questions.count(),
             'answers': result_data,
         })

@@ -47,7 +47,7 @@ const AttemptTest = () => {
     try {
       const answers = Object.entries(selectedAnswers).map(([question, selected_option]) => ({ question: Number(question), selected_option: Number(selected_option) }));
       await api.submitTest({ test: Number(testId), answers });
-      navigate(`/myclass/${test.course}/tests`);
+      navigate(`/myclass/${test.course}/tests/${testId}/results`);
     } catch (err) {
       setMessage(err.message);
       setSubmitting(false);

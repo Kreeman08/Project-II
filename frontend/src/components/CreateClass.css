@@ -151,85 +151,6 @@
   color: var(--textdim);
 }
 
-/* =========================
-   PERMISSION CARD
-========================= */
-
-.permission-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 16px;
-
-  padding: 18px;
-
-  border-radius: 10px;
-  border: 1px solid var(--menu);
-
-  background: var(--card);
-}
-
-.permission-card h4 {
-  margin: 0;
-
-  font-size: 18px;
-  font-weight: 700;
-
-  color: var(--text);
-}
-
-/* =========================
-   SWITCH
-========================= */
-
-.switch {
-  position: relative;
-  width: 70px;
-  height: 38px;
-  flex-shrink: 0;
-}
-
-.switch input {
-  display: none;
-}
-
-.slider {
-  position: absolute;
-  inset: 0;
-
-  background: #3a4a63;
-  border-radius: 999px;
-
-  cursor: pointer;
-
-  transition: 0.2s;
-}
-
-.slider::before {
-  content: "";
-
-  position: absolute;
-  top: 4px;
-  left: 4px;
-
-  width: 30px;
-  height: 30px;
-
-  border-radius: 50%;
-
-  background: white;
-
-  transition: 0.2s;
-}
-
-.switch input:checked + .slider {
-  background:  #5c8cfd;
-}
-
-.switch input:checked + .slider::before {
-  transform: translateX(32px);
-}
 
 /* =========================
    FOOTER
@@ -242,19 +163,13 @@
 .modal-primary {
   width: 100%;
   min-height: 64px;
-
   border: none;
   border-radius: 10px;
-
-  background: linear-gradient(90deg, #3478f6, #168b80);
-
+  background: var(--button);
   color: white;
-
   font-size: 20px;
   font-weight: 800;
-
   cursor: pointer;
-
   transition: 0.2s ease;
 }
 

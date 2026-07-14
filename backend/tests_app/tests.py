@@ -3,7 +3,7 @@ from rest_framework.test import APITestCase
 
 from courses.models import Course, Enrollment
 from users.models import User
-from .models import Option, Question, Test, TestSubmission
+from .models import Answer, Option, Question, Test, TestSubmission
 
 
 class TestFeatureApiTests(APITestCase):
@@ -82,7 +82,7 @@ class TestFeatureApiTests(APITestCase):
         response = self.client.patch(f'/api/questions/{question.id}/', {'text': 'Changed'}, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['detail'][0].code, 'invalid')
+        self.assertIn('Unpublish this test', str(response.data['detail']))
 
     def test_enrolled_student_can_submit_once_with_valid_answers(self):
         test, question = self.make_complete_test(published=True)
@@ -109,3 +109,42 @@ class TestFeatureApiTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['marks'], 0)
+
+    def test_submission_result_returns_question_wise_breakdown(self):
+        test, question = self.make_complete_test(published=True)
+        correct_option = question.options.get(is_correct=True)
+        wrong_option = question.options.exclude(id=correct_option.id).first()
+        submission = TestSubmission.objects.create(test=test, student=self.student, marks=0)
+        Answer.objects.create(
+            submission=submission,
+            question=question,
+            selected_option=wrong_option,
+        )
+        self.client.force_authenticate(self.student)
+
+        response = self.client.get(f'/api/test-submissions/{submission.id}/result/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['marks'], 0)
+        self.assertEqual(response.data['total_marks'], 1)
+        self.assertEqual(response.data['answers'][0]['question_number'], 1)
+        self.assertEqual(response.data['answers'][0]['question_text'], question.text)
+        self.assertEqual(response.data['answers'][0]['student_answer'], wrong_option.text)
+        self.assertEqual(response.data['answers'][0]['correct_answer'], correct_option.text)
+        self.assertEqual(response.data['answers'][0]['marks_obtained'], 0)
+        self.assertFalse(response.data['answers'][0]['is_correct'])
+
+    def test_submission_result_includes_unanswered_questions(self):
+        test, question = self.make_complete_test(published=True)
+        correct_option = question.options.get(is_correct=True)
+        submission = TestSubmission.objects.create(test=test, student=self.student, marks=0)
+        self.client.force_authenticate(self.student)
+
+        response = self.client.get(f'/api/test-submissions/{submission.id}/result/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['answers'][0]['question_id'], question.id)
+        self.assertIsNone(response.data['answers'][0]['student_answer'])
+        self.assertEqual(response.data['answers'][0]['correct_answer'], correct_option.text)
+        self.assertEqual(response.data['answers'][0]['marks_obtained'], 0)
+        self.assertFalse(response.data['answers'][0]['is_correct'])

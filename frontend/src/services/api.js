@@ -200,6 +200,8 @@ export const api = {
       method: "POST",
       body: JSON.stringify(payload),
     }),
+  testSubmissions: () => apiRequest("/test-submissions/"),
+  testSubmissionResult: (id) => apiRequest(`/test-submissions/${id}/result/`),
   coursePosts: () => apiRequest("/course-posts/"),
   createCoursePost: (formData) =>
     apiRequest("/course-posts/", {

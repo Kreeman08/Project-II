@@ -9,7 +9,6 @@
 }
 
 /* MAIN AREA */
-
 .main-content {
   flex: 1;
   display: flex;
@@ -30,11 +29,15 @@
 }
 
 .page-state {
+  display: flex;
+  justify-content: center;
+  align-items: center; 
   padding: 18px;
   color: var(--textdim);
   background: var(--sidebar);
   border: 1px solid var(--textdim);
   border-radius: 8px;
+  height: 100px;
 }
 
 .form-message {

@@ -190,107 +190,121 @@ function Members() {
       </div>
     );
   }
-    return (
-    <section className="members-page">
-      <div className="members-header">
-        <div>
-          <p>Course Management</p>
-          <h1>Members</h1>
-          <span>
-            {members.length} enrolled student
-            {members.length === 1 ? "" : "s"}
-          </span>
-        </div>
+    
+  return (
+  <section className="members-page">
+    <div className="members-header">
+      <div>
+        <h1>Course Members Management</h1>
 
-        <label className="members-search">
-          <FontAwesomeIcon icon={faMagnifyingGlass} />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search students"
-          />
-        </label>
+        <span>
+          {members.length} enrolled student
+          {members.length === 1 ? "" : "s"}
+        </span>
       </div>
 
-      {message && (
-        <div className="form-message error">
-          {message}
-        </div>
-      )}
+      <label className="members-search">
 
-      {/* ================= CLASS DEFAULTS ================= */}
+        <FontAwesomeIcon icon={faMagnifyingGlass} />
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search students"
+        />
+      </label>
+    </div>
 
-      <section className="members-class-settings">
-        <strong>Class Defaults</strong>
+    {message && (
+      <div className="form-message error">
+        {message}
+      </div>
+    )}
 
-        <label>
-          <input
-            type="checkbox"
-            checked={settings.comments}
-            disabled={busy}
-            onChange={(e) =>
-              updateClassSetting(
-                "comments",
-                e.target.checked
-              )
-            }
-          />
-          Allow student comments
+    {/* ================= CLASS SETTINGS ================= */}
+
+    <section className="members-class-settings">
+      <strong>Course Defaults</strong>
+
+      <div className="members-class-settings__toggles">
+        <label className="toggle-label">
+          <span>Allow student comments</span>
+          <span className="toggle-switch">
+            <input
+              type="checkbox"
+              checked={settings.comments}
+              disabled={busy}
+              onChange={(e) =>
+                updateClassSetting(
+                  "comments",
+                  e.target.checked
+                )
+              }
+            />
+            <span className="slider"></span>
+          </span>
         </label>
 
-        <label>
-          <input
-            type="checkbox"
-            checked={settings.files}
-            disabled={busy}
-            onChange={(e) =>
-              updateClassSetting(
-                "files",
-                e.target.checked
-              )
-            }
-          />
-          Allow student file sharing
+        <label className="toggle-label">
+          <span> Allow student file sharing</span>
+          <span className="toggle-switch">
+            <input
+              type="checkbox"
+              checked={settings.files}
+              disabled={busy}
+              onChange={(e) =>
+                updateClassSetting(
+                  "files",
+                  e.target.checked
+                )
+              }
+            />
+
+            <span className="slider"></span>
+          </span>
         </label>
-      </section>
+      </div>
+    </section>
 
-      {/* ================= MEMBER LIST ================= */}
+    {/* ================= MEMBER LIST ================= */}
+    <div className="members-list">
+      {visible.map((member) => (
+        <article
+          className="member-card"
+          key={member.id}
+        >
 
-      <div className="members-list">
-        {visible.map((member) => (
-          <article
-            className="member-card"
-            key={member.id}
-          >
-            <div className="member-profile">
+          <div className="member-profile">
+            <span>
+              {initials(nameFor(member))}
+            </span>
+
+            <div>
+              <h2>{nameFor(member)}</h2>
+
+              <p>
+                {member.student_email ||
+                  "No email address"}
+              </p>
+
+
+              <small>
+                Joined{" "}
+                {new Date(
+                  member.enrolled_at
+                ).toLocaleDateString()}
+              </small>
+            </div>
+          </div>
+
+          {/* ================= Permissions ================= */}
+          <div className="member-permissions">
+            <label className="permission-toggle">
               <span>
-                {initials(nameFor(member))}
+                Comments
               </span>
 
-              <div>
-                <h2>{nameFor(member)}</h2>
+              <span className="toggle-switch small">
 
-                <p>
-                  {member.student_email ||
-                    "No email address"}
-                </p>
-
-                <small>
-                  Joined{" "}
-                  {new Date(
-                    member.enrolled_at
-                  ).toLocaleDateString()}
-                </small>
-              </div>
-            </div>
-
-            {/* ================= Permissions ================= */}
-
-            <div className="member-permissions">
-
-              {/* COMMENTS */}
-
-              <label>
                 <input
                   type="checkbox"
                   checked={
@@ -306,12 +320,15 @@ function Members() {
                     )
                   }
                 />
-                Comments
-              </label>
+                <span className="slider"></span>
+              </span>
+            </label>
 
-              {/* FILE SHARING */}
 
-              <label>
+
+            <label className="permission-toggle">
+              <span>File Sharing</span>
+              <span className="toggle-switch small">
                 <input
                   type="checkbox"
                   checked={
@@ -327,33 +344,34 @@ function Members() {
                     )
                   }
                 />
-                File Sharing
-              </label>
+                <span className="slider"></span>
+              </span>
+            </label>
+          </div>
 
-              
-            </div>
+          <button
+            className="member-remove"
+            onClick={() => remove(member)}
+          >
 
-            <button
-              className="member-remove"
-              onClick={() => remove(member)}
-            >
-              <FontAwesomeIcon
-                icon={faUserMinus}
-              />
-              Remove
-            </button>
-          </article>
-        ))}
+            <FontAwesomeIcon
+              icon={faUserMinus}
+            />
+            Remove
+          </button>
+        </article>
+
+      ))}
+    </div>
+
+    {!visible.length && (
+      <div className="page-state">
+        No enrolled students match your
+        search.
       </div>
-
-      {!visible.length && (
-        <div className="page-state">
-          No enrolled students match your
-          search.
-        </div>
-      )}
-    </section>
-  );
+    )}
+  </section>
+);
 }
 
 export default Members;

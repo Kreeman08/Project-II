@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faCheck, faCirclePlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faCirclePlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { api, apiRequest } from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
@@ -137,7 +137,7 @@ const AddTest = () => {
   return (
     <section className="test-builder">
       <div className="test-builder__header">
-        <div><button className="builder-back" onClick={() => navigate(-1)}><FontAwesomeIcon icon={faArrowLeft} /> Back to tests</button><h1>{existingTest ? "Edit test" : "Create test"}</h1><p>Every question is multiple choice with exactly four answers and one correct answer.</p></div>
+        <div><h1>{existingTest ? "Edit test" : "Create test"}</h1><p>Every question is multiple choice with exactly four answers and one correct answer.</p></div>
         <div className="builder-actions"><button className="builder-button builder-button--secondary" disabled={busy} onClick={() => save(false)}>Save draft</button><button className="builder-button builder-button--primary" disabled={busy || !canPublish} onClick={() => save(true)}><FontAwesomeIcon icon={faCheck} /> {busy ? "Saving…" : "Publish test"}</button></div>
       </div>
       {message && <div className="form-message error">{message}</div>}

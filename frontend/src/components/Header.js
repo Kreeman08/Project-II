@@ -21,7 +21,110 @@ function Header({ darkMode, setDarkMode, onLogoutRequest }) {
     window.dispatchEvent(new CustomEvent('classes:search', { detail: query }));
   }, [query]);
 
-  return <header className="header"><div className="header-right"><div className="sidebar-brand"><img src={logo} alt="Academy LMS Logo" className="sidebar-logo" /><h2>Academy</h2></div><div className="search-area"><button type="button" className="search-icon-btn" aria-label="Search"><FontAwesomeIcon icon={faSearch} className="search-icon" /></button><input type="text" placeholder="Search the classes" className="search-input" value={query} onChange={(event) => setQuery(event.target.value)} />{query && <button type="button" className="clear-btn-input" onClick={() => setQuery("")}>&times;</button>}</div></div><div className="header-left"><button className="theme-btn theme-btn--toggle" onClick={() => setDarkMode(!darkMode)} aria-label={darkMode ? "Use light mode" : "Use dark mode"}><FontAwesomeIcon icon={darkMode ? faMoon : faSun} size="lg" /></button><div className="profile-menu" ref={profileRef}><button className="profile-trigger" onClick={() => setProfileOpen((open) => !open)} aria-expanded={profileOpen}><span className="profile-avatar">{displayName.slice(0, 1).toUpperCase() || <FontAwesomeIcon icon={faUser} />}</span><FontAwesomeIcon icon={faChevronDown} /></button>{profileOpen && <div className="profile-dropdown"><div className="profile-dropdown__identity"><span className="profile-avatar profile-avatar--large">{displayName.slice(0, 1).toUpperCase()}</span><div><strong>{displayName}</strong><span>{user?.email || "No email address"}</span></div></div><button onClick={() => { setProfileOpen(false); onLogoutRequest(); }}><FontAwesomeIcon icon={faArrowRightFromBracket} /> Log out</button></div>}</div></div></header>;
+  return (
+  <header className="header">
+    <div className="header-right">
+      <div className="sidebar-brand">
+        <img
+          src={logo}
+          alt="Academy LMS Logo"
+          className="sidebar-logo"
+        />
+        <h2>Academy</h2>
+      </div>
+
+      <div className="search-area">
+        <button
+          type="button"
+          className="search-icon-btn"
+          aria-label="Search"
+        >
+          <FontAwesomeIcon
+            icon={faSearch}
+            className="search-icon"
+          />
+        </button>
+
+        <input
+          type="text"
+          placeholder="Search the classes"
+          className="search-input"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+        />
+
+        {query && (
+          <button
+            type="button"
+            className="clear-btn-input"
+            onClick={() => setQuery("")}
+          >
+            &times;
+          </button>
+        )}
+      </div>
+    </div>
+
+    <div className="header-left">
+      <button
+        className="theme-btn theme-btn--toggle"
+        onClick={() => setDarkMode(!darkMode)}
+        aria-label={darkMode ? "Use light mode" : "Use dark mode"}
+      >
+        <FontAwesomeIcon
+          icon={darkMode ? faMoon : faSun}
+          size="lg"
+        />
+      </button>
+
+      <div
+        className="profile-menu"
+        ref={profileRef}
+      >
+        <button
+          className="profile-trigger"
+          onClick={() => setProfileOpen((open) => !open)}
+          aria-expanded={profileOpen}
+        >
+          <span className="profile-avatar">
+            {displayName.slice(0, 1).toUpperCase() || (
+              <FontAwesomeIcon icon={faUser} />
+            )}
+          </span>
+
+          <FontAwesomeIcon icon={faChevronDown} />
+        </button>
+
+        {profileOpen && (
+          <div className="profile-dropdown">
+            <div className="profile-dropdown__identity">
+              <span className="profile-avatar profile-avatar--large">
+                {displayName.slice(0, 1).toUpperCase()}
+              </span>
+
+              <div>
+                <strong>{displayName}</strong>
+                <span>
+                  {user?.email || "No email address"}
+                </span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                setProfileOpen(false);
+                onLogoutRequest();
+              }}
+            >
+              <FontAwesomeIcon icon={faArrowRightFromBracket} />
+              {" "}Log out
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  </header>
+);
 }
 
 export default Header;

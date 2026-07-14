@@ -1,8 +1,6 @@
 /* src/pages/MyClasses.css */
-
 .myclasses-page {
-  margin-top: 80px;
-  padding: 30px;
+  padding: 20px 30px;
 }
 
 /* HEADER */
@@ -63,41 +61,31 @@
 
 .myclasses-sortwrapper select {
   padding: 8px 12px;
-
   font-size: 14px;
-
   border: 1px solid var(--textdim);
   border-radius: 6px;
-
   background: var(--sidebar);
   color: var(--text);
-
   outline: none;
   cursor: pointer;
 }
 
 /* GRID */
-
 .myclasses-grid {
   display: grid;
-
   grid-template-columns:
     repeat(auto-fill, minmax(250px, 1fr));
-
   gap: 30px;
-
-  max-width: 1200px;
+  max-width: 1350px;
 }
 
 /* LINK */
-
 .myclasses-link {
   text-decoration: none;
   color: inherit;
 }
 
 /* CARD */
-
 .myclasses-card {
   background: var(--sidebar);
 
