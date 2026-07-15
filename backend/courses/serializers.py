@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Course, CoursePost, CoursePostReply, Enrollment, LeaveCourseRequest, LeaveRequest, Notification
+from .models import Course, CoursePost, CoursePostReply, Enrollment, JoinCourseRequest, LeaveCourseRequest, LeaveRequest, Notification
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -17,6 +17,7 @@ class CourseSerializer(serializers.ModelSerializer):
             'course_code',
             'allow_student_comments',
             'allow_student_file_sharing',
+            'enrollment_requires_approval',
             'teacher',
             'teacher_name',
             'enrollment_count',
@@ -148,6 +149,24 @@ class LeaveCourseRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = LeaveCourseRequest
+        fields = [
+            'id', 'student', 'student_name', 'student_email', 'course', 'course_name',
+            'teacher', 'teacher_name', 'status', 'created_at', 'updated_at',
+        ]
+        read_only_fields = [
+            'student', 'student_name', 'student_email', 'teacher', 'teacher_name',
+            'status', 'created_at', 'updated_at',
+        ]
+
+
+class JoinCourseRequestSerializer(serializers.ModelSerializer):
+    course_name = serializers.CharField(source='course.name', read_only=True)
+    student_name = serializers.CharField(source='student.get_full_name', read_only=True)
+    student_email = serializers.EmailField(source='student.email', read_only=True)
+    teacher_name = serializers.CharField(source='teacher.get_full_name', read_only=True)
+
+    class Meta:
+        model = JoinCourseRequest
         fields = [
             'id', 'student', 'student_name', 'student_email', 'course', 'course_name',
             'teacher', 'teacher_name', 'status', 'created_at', 'updated_at',

@@ -12,9 +12,13 @@ const JoinClassModal = ({ closeModal }) => {
     setMessage("");
 
     try {
-      await api.joinCourse(courseCode);
-      window.dispatchEvent(new Event("courses:changed"));
-      closeModal();
+      const response = await api.joinCourse(courseCode);
+      if (response.join_request) {
+        setMessage(response.detail || "Join request submitted. Your teacher will review it.");
+      } else {
+        window.dispatchEvent(new Event("courses:changed"));
+        closeModal();
+      }
     } catch (err) {
       setMessage(err.message);
     } finally {
@@ -46,12 +50,12 @@ const JoinClassModal = ({ closeModal }) => {
             />
           </label>
 
-          {message && <div className="form-message error">{message}</div>}
+          {message && <div className={message.toLowerCase().includes("submitted") ? "form-message success" : "form-message error"}>{message}</div>}
         </div>
 
         <div className="modal-footer">
           <button className="join-btn modal-primary" onClick={handleJoin} disabled={busy || !courseCode.trim()}>
-            {busy ? "Joining..." : "Join class"}
+            {busy ? "Submitting..." : "Join class"}
           </button>
         </div>
       </div>

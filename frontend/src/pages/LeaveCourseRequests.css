@@ -1,14 +1,16 @@
-.leave-course-page {
+.enrollment-requests-page {
   color: var(--text);
 }
-.leave-course-page__heading {
+
+.enrollment-requests-page__heading {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 16px;
   margin-bottom: 24px;
 }
-.leave-course-page__heading p {
+
+.enrollment-requests-page__heading p {
   margin: 0;
   color: var(--button);
   font-size: 0.78rem;
@@ -16,47 +18,130 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-.leave-course-page__heading h1 {
+
+.enrollment-requests-page__heading h1 {
   margin: 5px 0;
 }
-.leave-course-page__heading span {
+
+.enrollment-requests-page__heading span,
+.enrollment-mode-card p {
   color: var(--textdim);
 }
-.leave-course-page__heading > strong {
+
+.enrollment-requests-page__heading > strong {
   padding: 8px 11px;
   border-radius: 99px;
   background: var(--textselect);
   color: var(--button);
 }
-.leave-course-table-wrap {
+
+.enrollment-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.enrollment-tabs button,
+.enrollment-mode-options button,
+.enrollment-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--menu);
+  border-radius: 9px;
+  background: var(--card);
+  color: var(--text);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.enrollment-tabs button {
+  min-height: 42px;
+  padding: 0 14px;
+}
+
+.enrollment-tabs button.active,
+.enrollment-mode-options button.active {
+  border-color: var(--button);
+  background: var(--button);
+  color: #fff;
+}
+
+.enrollment-mode-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 18px;
+  padding: 18px;
+  border: 1px solid var(--menu);
+  border-radius: 14px;
+  background: var(--card);
+}
+
+.enrollment-mode-card h2 {
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+}
+
+.enrollment-mode-card p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.enrollment-mode-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.enrollment-mode-options button {
+  min-height: 40px;
+  padding: 0 12px;
+}
+
+.enrollment-mode-options button:disabled,
+.enrollment-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.enrollment-table-wrap {
   overflow-x: auto;
   border: 1px solid var(--menu);
   border-radius: 14px;
   background: var(--card);
 }
-.leave-course-table {
+
+.enrollment-table {
   width: 100%;
-  border-collapse: collapse;
   min-width: 720px;
+  border-collapse: collapse;
 }
-.leave-course-table th,
-.leave-course-table td {
+
+.enrollment-table th,
+.enrollment-table td {
   padding: 15px;
   text-align: left;
   border-bottom: 1px solid var(--menu);
 }
-.leave-course-table th {
+
+.enrollment-table th {
   color: var(--textdim);
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
-.leave-course-table td small {
+
+.enrollment-table td small {
   display: block;
   margin-top: 3px;
   color: var(--textdim);
 }
-.leave-course-status {
+
+.enrollment-status {
   display: inline-block;
   padding: 5px 9px;
   border-radius: 99px;
@@ -64,40 +149,55 @@
   font-size: 0.78rem;
   font-weight: 800;
 }
-.leave-course-status--pending {
+
+.enrollment-status--pending {
   background: #fef3c7;
   color: #b45309;
 }
-.leave-course-status--approved {
+
+.enrollment-status--approved {
   background: #dcfce7;
   color: #166534;
 }
-.leave-course-status--declined {
+
+.enrollment-status--rejected,
+.enrollment-status--declined {
   background: #fee2e2;
   color: #b91c1c;
 }
-.leave-course-actions {
+
+.enrollment-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
-.leave-course-actions button {
+
+.enrollment-actions button {
+  min-height: 36px;
+  padding: 0 11px;
   border: 0;
-  border-radius: 8px;
-  padding: 8px 11px;
   background: var(--button);
   color: #fff;
-  font-weight: 800;
-  cursor: pointer;
 }
-.leave-course-actions__reject {
+
+.enrollment-actions__reject {
   background: #b91c1c !important;
 }
+
 .form-message.success {
   color: #86efac;
   border: 1px solid rgba(34, 197, 94, 0.4);
 }
-@media (max-width: 600px) {
-  .leave-course-page__heading {
+
+@media (max-width: 700px) {
+  .enrollment-requests-page__heading,
+  .enrollment-mode-card {
     flex-direction: column;
+    align-items: stretch;
+  }
+
+  .enrollment-tabs button,
+  .enrollment-mode-options button {
+    flex: 1;
   }
 }

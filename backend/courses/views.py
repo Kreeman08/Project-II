@@ -6,12 +6,13 @@ from django.db import IntegrityError, transaction
 from django.db.models import Q
 from django.utils import timezone
 
-from .models import Course, CoursePost, CoursePostReply, Enrollment, LeaveCourseRequest, LeaveRequest, Notification
+from .models import Course, CoursePost, CoursePostReply, Enrollment, JoinCourseRequest, LeaveCourseRequest, LeaveRequest, Notification
 from .serializers import (
     CoursePostReplySerializer,
     CoursePostSerializer,
     CourseSerializer,
     EnrollmentSerializer,
+    JoinCourseRequestSerializer,
     LeaveCourseRequestSerializer,
     JoinCourseSerializer,
     LeaveRequestSerializer,
@@ -117,10 +118,38 @@ class EnrollmentViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        enrollment, created = Enrollment.objects.get_or_create(student=request.user, course=course)
-        if not created:
+        if Enrollment.objects.filter(student=request.user, course=course).exists():
             return Response({'detail': 'You are already enrolled in this course.'}, status=status.HTTP_400_BAD_REQUEST)
 
+        if course.enrollment_requires_approval:
+            try:
+                join_request, created = JoinCourseRequest.objects.get_or_create(
+                    student=request.user,
+                    course=course,
+                    status=JoinCourseRequest.Status.PENDING,
+                    defaults={'teacher': course.teacher},
+                )
+            except IntegrityError:
+                return Response(
+                    {'detail': 'You already have a pending join request for this course.'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            if not created:
+                return Response(
+                    {'detail': 'You already have a pending join request for this course.'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            notify(course.teacher, course, 'join_course_requested', f'{display_name(request.user)} requested to join {course.name}.')
+            return Response(
+                {
+                    'detail': 'Join request submitted for teacher approval.',
+                    'join_request': JoinCourseRequestSerializer(join_request).data,
+                    'course': CourseSerializer(course).data,
+                },
+                status=status.HTTP_201_CREATED,
+            )
+
+        enrollment = Enrollment.objects.create(student=request.user, course=course)
         notify(course.teacher, course, 'student_joined', f'{display_name(request.user)} joined {course.name}.')
         return Response(
             {
@@ -173,7 +202,6 @@ class CoursePostViewSet(viewsets.ModelViewSet):
         ).first()
         is_member = course.teacher == self.request.user or enrollment is not None
         if not is_member:
-            from rest_framework import serializers
             raise serializers.ValidationError(
                 {'course': 'You must be in this class to post.'}
             )
@@ -377,3 +405,58 @@ class LeaveCourseRequestViewSet(viewsets.ModelViewSet):
         message = f'Your request to leave {leave_request.course.name} was {leave_request.get_status_display().lower()}.'
         notify(leave_request.student, leave_request.course, 'leave_course_decided', message)
         return Response(self.get_serializer(leave_request).data)
+
+
+class JoinCourseRequestViewSet(viewsets.ModelViewSet):
+    serializer_class = JoinCourseRequestSerializer
+    http_method_names = ['get', 'post', 'head', 'options']
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = JoinCourseRequest.objects.select_related('student', 'course', 'teacher')
+        if user.is_superuser:
+            queryset = queryset
+        else:
+            queryset = queryset.filter(Q(teacher=user) | Q(student=user)).distinct()
+        course_id = self.request.query_params.get('course')
+        return queryset.filter(course_id=course_id) if course_id else queryset
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        course = serializer.validated_data['course']
+        if course.teacher_id == user.id:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied('Teachers cannot request to join their own course.')
+        if not course.enrollment_requires_approval:
+            raise serializers.ValidationError(
+                {'detail': 'This course allows automatic enrollment. Use the course code to join.'}
+            )
+        if Enrollment.objects.filter(course=course, student=user).exists():
+            raise serializers.ValidationError({'detail': 'You are already enrolled in this course.'})
+        if JoinCourseRequest.objects.filter(student=user, course=course, status=JoinCourseRequest.Status.PENDING).exists():
+            raise serializers.ValidationError({'detail': 'You already have a pending join request for this course.'})
+        try:
+            serializer.save(student=user, teacher=course.teacher)
+        except IntegrityError:
+            raise serializers.ValidationError({'detail': 'You already have a pending join request for this course.'})
+        notify(course.teacher, course, 'join_course_requested', f'{display_name(user)} requested to join {course.name}.')
+
+    @action(detail=True, methods=['post'])
+    def decide(self, request, pk=None):
+        join_request = self.get_object()
+        if not request.user.is_superuser and join_request.teacher_id != request.user.id:
+            return Response({'detail': 'Only the assigned teacher can decide this join request.'}, status=status.HTTP_403_FORBIDDEN)
+        decision = request.data.get('status')
+        if decision not in [JoinCourseRequest.Status.APPROVED, JoinCourseRequest.Status.REJECTED]:
+            return Response({'detail': 'Status must be approved or rejected.'}, status=status.HTTP_400_BAD_REQUEST)
+        if join_request.status != JoinCourseRequest.Status.PENDING:
+            return Response({'detail': 'This join request has already been decided.'}, status=status.HTTP_400_BAD_REQUEST)
+        with transaction.atomic():
+            join_request.status = decision
+            join_request.save(update_fields=['status', 'updated_at'])
+            if decision == JoinCourseRequest.Status.APPROVED:
+                Enrollment.objects.get_or_create(student=join_request.student, course=join_request.course)
+        message = f'Your request to join {join_request.course.name} was {join_request.get_status_display().lower()}.'
+        notify(join_request.student, join_request.course, 'join_course_decided', message)
+        return Response(self.get_serializer(join_request).data)

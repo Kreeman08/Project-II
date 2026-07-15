@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from users.models import User
-from .models import Course, CoursePost, Enrollment, Notification
+from .models import Course, CoursePost, Enrollment, JoinCourseRequest, Notification
 
 
 class ClassroomManagementTests(APITestCase):
@@ -12,7 +12,9 @@ class ClassroomManagementTests(APITestCase):
         self.other_student = User.objects.create_user('other', password='password')
         self.course = Course.objects.create(name='Science', teacher=self.teacher)
 
-    def test_join_and_leave_create_teacher_notifications(self):
+    def test_auto_join_and_leave_create_teacher_notifications(self):
+        self.course.enrollment_requires_approval = False
+        self.course.save(update_fields=['enrollment_requires_approval'])
         self.client.force_authenticate(self.student)
         join = self.client.post('/api/enrollments/join/', {'course_code': self.course.course_code})
         enrollment = Enrollment.objects.get(student=self.student, course=self.course)
@@ -22,6 +24,44 @@ class ClassroomManagementTests(APITestCase):
         self.assertEqual(leave.status_code, status.HTTP_200_OK)
         self.assertFalse(Enrollment.objects.filter(pk=enrollment.id).exists())
         self.assertEqual(Notification.objects.filter(recipient=self.teacher).count(), 2)
+
+    def test_join_requires_teacher_approval_by_default(self):
+        self.client.force_authenticate(self.student)
+
+        response = self.client.post('/api/enrollments/join/', {'course_code': self.course.course_code})
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertIn('join_request', response.data)
+        self.assertFalse(Enrollment.objects.filter(student=self.student, course=self.course).exists())
+        self.assertTrue(JoinCourseRequest.objects.filter(student=self.student, course=self.course, status='pending').exists())
+
+    def test_teacher_can_approve_join_request(self):
+        join_request = JoinCourseRequest.objects.create(
+            student=self.student,
+            course=self.course,
+            teacher=self.teacher,
+        )
+        self.client.force_authenticate(self.teacher)
+
+        response = self.client.post(f'/api/join-course-requests/{join_request.id}/decide/', {'status': 'approved'})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['status'], 'approved')
+        self.assertTrue(Enrollment.objects.filter(student=self.student, course=self.course).exists())
+
+    def test_teacher_can_reject_join_request_without_enrolling_student(self):
+        join_request = JoinCourseRequest.objects.create(
+            student=self.student,
+            course=self.course,
+            teacher=self.teacher,
+        )
+        self.client.force_authenticate(self.teacher)
+
+        response = self.client.post(f'/api/join-course-requests/{join_request.id}/decide/', {'status': 'rejected'})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['status'], 'rejected')
+        self.assertFalse(Enrollment.objects.filter(student=self.student, course=self.course).exists())
 
     def test_teacher_removal_notifies_student_and_removes_access(self):
         enrollment = Enrollment.objects.create(student=self.student, course=self.course)

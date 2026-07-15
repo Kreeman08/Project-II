@@ -225,4 +225,6 @@ export const api = {
   createLeaveCourseRequest: (course) => apiRequest('/leave-course-requests/', { method: 'POST', body: JSON.stringify({ course }) }),
   cancelLeaveCourseRequest: (id) => apiRequest(`/leave-course-requests/${id}/cancel/`, { method: 'POST' }),
   decideLeaveCourseRequest: (id, status) => apiRequest(`/leave-course-requests/${id}/decide/`, { method: 'POST', body: JSON.stringify({ status }) }),
+  joinCourseRequests: (courseId) => apiRequest(`/join-course-requests/${courseId ? `?course=${courseId}` : ''}`),
+  decideJoinCourseRequest: (id, status) => apiRequest(`/join-course-requests/${id}/decide/`, { method: 'POST', body: JSON.stringify({ status }) }),
 };

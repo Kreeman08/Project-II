@@ -96,6 +96,7 @@ if (!user) {
           <Route path="assignment" element={<Assignment />} />
           <Route path="assignment/:assignmentId" element={<AssignmentDetails />}/>
           <Route path="members" element={<Members />} />
+          <Route path="enrollment-requests" element={<LeaveCourseRequests />} />
           <Route path="leave-requests" element={<LeaveCourseRequests />} />
           <Route path="tests" element={<Test />} />
           <Route path="tests/:testId/attempt" element={<AttemptTest />} />

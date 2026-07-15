@@ -16,6 +16,7 @@ class Course(models.Model):
     course_code = models.CharField(max_length=12, unique=True, blank=True)
     allow_student_comments = models.BooleanField(default=True)
     allow_student_file_sharing = models.BooleanField(default=True)
+    enrollment_requires_approval = models.BooleanField(default=True)
 
     teacher = models.ForeignKey(
         User,
@@ -176,3 +177,30 @@ class LeaveCourseRequest(models.Model):
 
     def __str__(self):
         return f'{self.student.username} leaving {self.course.name} ({self.status})'
+
+
+class JoinCourseRequest(models.Model):
+    class Status(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        APPROVED = 'approved', 'Approved'
+        REJECTED = 'rejected', 'Rejected'
+
+    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='join_course_requests')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='join_course_requests')
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_join_course_requests')
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['student', 'course'],
+                condition=models.Q(status='pending'),
+                name='one_pending_join_course_request_per_student_course',
+            )
+        ]
+
+    def __str__(self):
+        return f'{self.student.username} joining {self.course.name} ({self.status})'
